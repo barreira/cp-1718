@@ -4,3 +4,7 @@ cp/
 *.log
 *.out
 *.ptb
+*.bbl
+*.blg
+*.ilg
+*.ind
