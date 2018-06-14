@@ -1,1 +1,6 @@
 cp/
+*.aux
+*.idx
+*.log
+*.out
+*.ptb
