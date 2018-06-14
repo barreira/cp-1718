@@ -107,11 +107,11 @@
 \begin{tabular}{ll}
 \textbf{Grupo} nr. & 99 (preencher)
 \\\hline
-a11111 & Nome1 (preencher)	
+a61855 & Ana Paula Carvalho
 \\
-a22222 & Nome2 (preencher)	
+aXXXXX & Eduardo Gil
 \\
-a33333 & Nome3 (preencher)	
+a73831 & João Pires Barreira		
 \end{tabular}
 \end{center}
 
@@ -974,18 +974,25 @@ outras funções auxiliares que sejam necessárias.
 \subsection*{Problema 1}
 
 \begin{code}
-inBlockchain = undefined
-outBlockchain = undefined
-recBlockchain = undefined    
-cataBlockchain = undefined     
-anaBlockchain = undefined
-hyloBlockchain = undefined
+semRepetidos :: Eq a => [a] -> Bool
+semRepetidos [] = True
+semRepetidos [a] = True
+semRepetidos (h:t) = if (elem h t == True)
+                     then False
+                     else semRepetidos t
 
-allTransactions = undefined
-ledger = undefined
-isValidMagicNr = undefined
+inBlockchain = either Bc Bcs
+outBlockchain (Bc b) = i1(b)
+outBlockchain (Bcs (b,bc)) = Right(b,bc)
+recBlockchain g = id -|- (id >< g)
+cataBlockchain g = g . (recBlockchain (cataBlockchain g)) . outBlockchain
+anaBlockchain g = inBlockchain . (recBlockchain (anaBlockchain g)) . g
+hyloBlockchain f g = cataBlockchain f . anaBlockchain g
+
+allTransactions = cataBlockchain (either (p2.p2) (conc . (p2.p2 >< id)))
+ledger = cataBlockchain (either (map(swap.p2).p2.p2) (conc . ((map(swap.p2).p2.p2) >< id)))
+isValidMagicNr = semRepetidos . (cataBlockchain (either (singl . p1) (conc . ((singl . p1) >< id))))
 \end{code}
-
 
 \subsection*{Problema 2}
 
