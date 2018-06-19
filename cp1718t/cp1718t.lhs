@@ -673,7 +673,7 @@ derive as funções |base k| e |loop| que são usadas como auxiliares acima.
 \begin{propriedade}
 Verificação que |bin n k| coincide com a sua especificação (\ref{eq:bin}):
 \begin{code}
-prop3 n k = (bin n k) == (fac n) % (fac k * (fac ((n-k))))
+prop3 (NonNegative n) (NonNegative k) = k <= n ==> (bin n k) == (fac n) % (fac k * (fac ((n-k))))
 \end{code}
 \end{propriedade}
 
@@ -997,20 +997,31 @@ isValidMagicNr = semRepetidos . (cataBlockchain (either (singl . p1) (conc . ((s
 \subsection*{Problema 2}
 
 \begin{code}
-inQTree = undefined
-outQTree = undefined
-baseQTree = undefined
-recQTree = undefined
-cataQTree = undefined
-anaQTree = undefined
-hyloQTree = undefined
+
+cellAux f (x,(y,z)) = f x y z
+blockAux g (a,(b,(c,d))) = g a b c d
+
+inQTree = either (cellAux Cell) (blockAux Block)
+outQTree (Cell a x y) = i1 ((a,(x,y)))
+outQTree (Block a b c d) = i2 ((a,(b,(c,d))))
+baseQTree g f = g >< id -|- (f >< (f >< (f >< f)))
+recQTree g = id -|- (g >< (g >< (g >< g)))
+cataQTree g = g . (recQTree (cataQTree g)) . outQTree
+anaQTree g = inQTree . (recQTree (anaQTree g)) . g
+hyloQTree f g = cataQTree f . anaQTree g
 
 instance Functor QTree where
-    fmap = undefined
+    fmap f = cataQTree(inQTree . baseQTree f id)
 
-rotateQTree = undefined
-scaleQTree = undefined
-invertQTree = undefined
+invertColor :: PixelRGBA8 -> PixelRGBA8
+invertColor (PixelRGBA8 r g b a) = PixelRGBA8 (r - 255) (g - 255) (b - 255) a
+
+rotateQTree = cataQTree (inQTree . (id >< swap -|- g2))
+    where g2 (a,(b,(c,d))) = (c,(a,(d,b)))
+scaleQTree k = cataQTree (inQTree . (g1 -|- id))
+    where g1 (a,(x,y)) = (a, (x*k, y*k))
+invertQTree = cataQTree (inQTree . (g1 -|- id))
+    where g1 (p,(x,y)) = (invertColor p, (x,y))
 compressQTree = undefined
 outlineQTree = undefined
 \end{code}
@@ -1025,16 +1036,20 @@ loop = undefined
 \subsection*{Problema 4}
 
 \begin{code}
-inFTree = undefined
-outFTree = undefined
-baseFTree = undefined
-recFTree = undefined
-cataFTree = undefined
-anaFTree = undefined
-hyloFTree = undefined
+
+compAux g (a,(b,c)) = g a b c
+
+inFTree = either Unit (compAux Comp)
+outFTree (Unit b) = i1 b
+outFTree (Comp a b c) = i2 (a,(b,c))
+baseFTree f g h = g -|- f >< (h >< h)
+recFTree g = id -|- (id >< (g >< g))
+cataFTree g = g . (recFTree (cataFTree g)) . outFTree
+anaFTree g = inFTree . (recFTree (anaFTree g)) . g
+hyloFTree f g = cataFTree f . anaFTree g
 
 instance Bifunctor FTree where
-    bimap = undefined
+    bimap f g = cataFTree (inFTree . (baseFTree f g id))
 
 generatePTree = undefined
 drawPTree = undefined
@@ -1300,7 +1315,7 @@ invertBMP from to = withBMP from to invertbm
 
 depthQTree :: QTree a -> Int
 depthQTree = cataQTree (either (const 0) f)
-    where f (a,(b,(c,d))) = maximum [a,b,c,d]
+    where f (a,(b,(c,d))) = 1 + maximum [a,b,c,d]
 
 compressbm :: Eq a => Int -> Matrix a -> Matrix a
 compressbm n = qt2bm . compressQTree n . bm2qt
