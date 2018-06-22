@@ -1023,14 +1023,52 @@ scaleQTree k = cataQTree (inQTree . (g1 -|- id))
 invertQTree = cataQTree (inQTree . (g1 -|- id))
     where g1 (p,(x,y)) = (invertColor p, (x,y))
 compressQTree = undefined
-outlineQTree = undefined
+outlineQTree p = qt2bm . cataQTree (inQTree . (aux -|- (id >< (id >< (id >< id)))))
+    where aux (a,(x,y)) = if (p a) == True
+                          then (True,(x,y)) 
+                          else (False,(x,y))
 \end{code}
 
 \subsection*{Problema 3}
 
+\begin{eqnarray*}
+\start
+	|split (cataNat (split (either (const 1) (mul)) (either (const 1) (succ.p2)))) (cataNat (split (either (const 1) (mul)) (either (succ) (succ.p2))))|
+%
+\just\equiv{ "Banana-split" (51), Def-functor-|Nat| }
+%
+    |cataNat ((split (either (const 1) (mul)) (either (const 1) (succ.p2)) >< split (either (const 1) (mul)) (either (succ) (succ.p2))) . split (id + p1) (id + p2))|
+\just\equiv{ Lei da Troca (28) |>< 2| }
+%
+    |cataNat ((either (split (const 1) (const 1)) (split (mul) (succ.p2)) >< either (split (const 1) (succ)) (split (mul) (succ.p2))) . split (id + p1) (id + p2))|
+%
+\just\equiv{ Absorção-x (11) }
+%
+    |cataNat (split (either (split (const 1) (const 1)) (split (mul) (succ.p2)) . (id + p1)) (either (split (const 1) (succ)) (split (mul) (succ.p2)) . (id + p2)))|
+%
+\just\equiv{ Absorção-+ (22) |>< 2|, Natural-id (1) |>< 2| }
+%
+    |cataNat (split (either (split (const 1) (const 1)) (split (mul) (succ.p2) . p1)) (either (split (const 1) (succ)) (split (mul) (succ.p2) . p2)))|
+%
+\just\equiv{ Lei da Troca (28) }
+%
+    |cataNat (either (split (split (const 1) (const 1)) (split (const 1) (succ))) (split (split (mul) (succ.p2) . p1) (split (mul) (succ.p2) . p2)))|
+%
+\just\equiv{ }
+%    
+\qed
+\end{eqnarray*}
+
 \begin{code}
-base = undefined
-loop = undefined
+
+pairToTuple :: ((t0,t1), (t2,t3)) -> (t0, t1, t2, t3)
+pairToTuple ((a,b), (c,d)) = (a,b,c,d)
+
+tupleToPair :: (t0, t1, t2, t3) -> ((t0,t1), (t2,t3))
+tupleToPair (a,b,c,d) = ((a,b), (c,d))
+
+base k = pairToTuple ((1, k+1), (1,1))
+loop = pairToTuple . (split (mul) (succ.p2) >< split (mul) (succ.p2)) . tupleToPair
 \end{code}
 
 \subsection*{Problema 4}
@@ -1051,7 +1089,23 @@ hyloFTree f g = cataFTree f . anaFTree g
 instance Bifunctor FTree where
     bimap f g = cataFTree (inFTree . (baseFTree f g id))
 
-generatePTree = undefined
+-- calcular o tamanho para um lado qualquer
+calculateSide :: Int -> Square
+calculateSide x = fromIntegral(x) * (sqrt(2)/2)
+
+{-
+Funcao que é usada  na recursividade do anamorfismo
+basicamente temos pares, que à esquerda temos o numero de niveis e à direita em que
+nivel estamos atual.
+quando forem iguais chegamos ao ultimo nivel -> acaba a recursividade (calcula o lado)
+caso recursivo calcula o lado atual e incrementa o nivel em que estamos
+-}
+genSquare :: (Int, Int) -> Either Square (Square, ((Int,Int),(Int,Int)))
+genSquare (o,n) | o == n    = i1 (calculateSide o)
+                | otherwise = i2 (calculateSide n, ((o,n+1), (o,n+1)))
+
+-- funcao principal -> anamorfismo sobre a estrutura, invocando a funcao aux com o nivel 0 inicialmente
+generatePTree o = anaFTree genSquare (o,0)
 drawPTree = undefined
 \end{code}
 
