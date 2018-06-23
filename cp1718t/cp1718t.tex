@@ -1509,6 +1509,8 @@ Finalmente, conseguimos chegar ao código da função \textit{isValidMagicNr} qu
 
 \subsection*{Problema 2}
 
+\paragraph{} Inicialmente chegou-se à codificação (apresentada abaixo) das funções para o tipo \textit{QTree}, que são muito parecidas às que já conhecemos para as \textit{LTree} (mas com quatro subárvores em vez de apenas duas).
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1545,10 +1547,10 @@ Finalmente, conseguimos chegar ao código da função \textit{isValidMagicNr} qu
 
 \subsubsection*{1.1. rotateQTree}
 
-A função \textbf{\textit{rotateQTree}} consiste em rodar uma \textit{QTree} 90 graus no sentido dos ponteiros do relógio. Esta função foi codificada recorrendo a um catamorfismo que obedece ao seguinte esquema:
+\paragraph{} A função \textbf{\textit{rotateQTree}} consiste em rodar uma \textit{QTree} 90 graus no sentido dos ponteiros do relógio. Esta função foi codificada recorrendo a um catamorfismo que obedece ao seguinte esquema:
 
 \begin{eqnarray*}
-\xymatrix@C=2cm{
+\xymatrix@C=2.5cm{
     \ensuremath{\Conid{QTree}\;\Conid{A}}
            \ar[d]_-{\ensuremath{\Varid{rotateQTree}\mathrel{=}\cata{\Varid{g}}}}
            \ar[r]_-{\ensuremath{\Varid{outQTree}}}           
@@ -1559,11 +1561,11 @@ A função \textbf{\textit{rotateQTree}} consiste em rodar uma \textit{QTree} 90
      \ensuremath{\Conid{QTree}\;\Conid{A}}
 &
      \ensuremath{\Conid{A}\mathbin{+}(\Conid{QTree}\;\Conid{A})}^4
-           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\alt{\Varid{g1}}{\Varid{g2}}}}
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\Varid{inQTree}\comp (\Varid{g1}\mathbin{+}\Varid{g2})}}
 }
 \end{eqnarray*}
 
-Uma \textit{QTree} ou é uma \textit{Cell} ou um \textit{Block}. Assim sendo, para o caso da \textit{Cell} (corresponde ao \textit{g1} da função gene \textit{g}), a única coisa que temos de fazer é inverter as dimensões da submatriz de bits gerada. Por exemplo, se tivermos uma \textit{Cell 1 3 4}, esta irá passar a corresponder a \textit{Cell 1 4 3} após a rotação. Deste modo, \textit{g1} pode ser obtida pelo seguinte esquema:
+Uma \textit{QTree} ou é uma \textit{Cell} ou um \textit{Block}. Assim sendo, para o caso da \textit{Cell} (correspondente ao \textit{g1} da função gene \textit{g}), a única coisa que temos de fazer é inverter as dimensões da submatriz de bits gerada. Por exemplo, se tivermos uma \textit{Cell 1 3 4}, esta irá passar a corresponder a \textit{Cell 1 4 3} após a rotação. Deste modo, \textit{g1} pode ser obtida pelo seguinte esquema:
 
 \vspace{0.5cm}
 
@@ -1591,6 +1593,8 @@ D & B
 
 Esta situação corresponderá a trocar as \textit{QTree} (A, B, C e D) de um \textit{Block} da mesma forma. Ou seja, \textit{Block A B C D} passará a ser \textit{Block C A D B}.
 
+Em último lugar, é preciso ainda juntar estes dois resultados, por forma a ter o tipo final pretendido (\textit{QTree}), o que será facilmente conseguido através da função \textit{inQTree}.
+
 \vspace{0.3cm}
 
 Finalmente, pode-se obter a codificação da função \textit{rotateQTree}, em que \textit{g2} é a função auxiliar que se encarrega da situação descrita acima.
@@ -1608,6 +1612,34 @@ Finalmente, pode-se obter a codificação da função \textit{rotateQTree}, em q
 
 \subsubsection*{1.2. scaleQTree}
 
+\paragraph{} A função \textbf{\textit{scaleQTree}} consiste em aumentar as dimensões de uma \textit{QTree} segundo um escalar dado. Esta função foi codificada recorrendo a um catamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@C=2.5cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\Varid{scaleQTree}\mathrel{=}\cata{\Varid{g}}}}
+           \ar[r]_-{\ensuremath{\Varid{outQTree}}}           
+&
+    \ensuremath{\Conid{A}\mathbin{+}(\Conid{QTree}\;\Conid{A})}^4
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{scaleQTree}}^4}
+\\
+     \ensuremath{\Conid{QTree}\;\Conid{A}}
+&
+     \ensuremath{\Conid{A}\mathbin{+}(\Conid{QTree}\;\Conid{A})}^4
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\Varid{inQTree}\comp (\Varid{g1}\mathbin{+}\Varid{g2})}}
+}
+\end{eqnarray*}
+
+Como já foi dito anteriormente, uma \textit{QTree} ou é uma \textit{Cell} ou um \textit{Block}. Assim sendo, para o caso da \textit{Cell} (correspondente ao \textit{g1} da função gene \textit{g}), a única coisa que temos de fazer é multiplicar os inteiros referentes às dimensões da submatriz de bits gerada. Deste modo, uma \textit{Cell 1 3 4} passará a corresponder a \textit{Cell 1 6 8} após uma escala de fator 2. Assim sendo, a função responsável pela escala de uma \textit{Cell} pode ser facilmente codificada como \textit{g1 (a,(x,y)) = (a, (x*k, y*k))}.
+
+Para o caso do \textit{Block} correspondente às quatro \textit{QTree} do esquema acima -- e que contém o resultado recursivo da aplicação desta função às subárvores --, não é preciso fazer mais nada, pelo que o \textit{g2} corresponde apenas a um \ensuremath{\Varid{id}}.
+
+Em último lugar, é preciso ainda juntar estes dois resultados, por forma a ter o tipo final pretendido (\textit{QTree}), o que será facilmente conseguido através da função \textit{inQTree}.
+
+\vspace{0.3cm}
+
+Finalmente, pode-se obter a codificação da função \textit{scaleQTree}:
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1621,14 +1653,49 @@ Finalmente, pode-se obter a codificação da função \textit{rotateQTree}, em q
 
 \subsubsection*{1.3. invertQTree}
 
+\paragraph{} A função \textbf{\textit{invertQTree}} consiste em inverter as cores de uma \textit{QTree}. Esta função foi codificada recorrendo a um catamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@C=2.5cm{
+    \ensuremath{\Conid{QTree}\;\Conid{A}}
+           \ar[d]_-{\ensuremath{\Varid{invertQTree}\mathrel{=}\cata{\Varid{g}}}}
+           \ar[r]_-{\ensuremath{\Varid{outQTree}}}           
+&
+    \ensuremath{\Conid{A}\mathbin{+}(\Conid{QTree}\;\Conid{A})}^4
+           \ar[d]^{\ensuremath{\Varid{id}\mathbin{+}\Varid{invertQTree}}^4}
+\\
+     \ensuremath{\Conid{QTree}\;\Conid{A}}
+&
+     \ensuremath{\Conid{A}\mathbin{+}(\Conid{QTree}\;\Conid{A})}^4
+           \ar[l]^-{\ensuremath{\Varid{g}\mathrel{=}\Varid{inQTree}\comp (\Varid{g1}\mathbin{+}\Varid{g2})}}
+}
+\end{eqnarray*}
+
+Como já foi dito anteriormente, uma \textit{QTree} ou é uma \textit{Cell} ou um \textit{Block}. Assim sendo, para o caso da \textit{Cell} (correspondente ao \textit{g1} da função gene \textit{g}), a única coisa que temos de fazer é inverter as cores da primeira componente da \textit{Cell} (do tipo \textit{PixelRGBA8}), o que corresponde a subtrair o valor de cada um dos campos do RGB do pixel ao valor 255. Para isso, utilizámos a seguinte função auxiliar:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{invertColor}\mathbin{::}\Conid{PixelRGBA8}\to \Conid{PixelRGBA8}{}\<[E]%
+\\
+\>[B]{}\Varid{invertColor}\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a})\mathrel{=}\Conid{PixelRGBA8}\;(\mathrm{255}\mathbin{-}\Varid{r})\;(\mathrm{255}\mathbin{-}\Varid{g})\;(\mathrm{255}\mathbin{-}\Varid{b})\;\Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Assim sendo, a função \textit{g1} pode ser codificada à custa da aplicação desta função auxiliar para o primeiro componente da \textit{Cell} (e deixando intactos os restantes dois componentes). Logo, a função pode ser dada por: \textit{g1 (p,(x,y)) = (invertColor p, (x,y))}.
+
+Para o caso do \textit{Block} correspondente às quatro \textit{QTree} do esquema acima -- e que contém o resultado recursivo da aplicação desta função às subárvores --, não é preciso fazer mais nada, pelo que o \textit{g2} corresponde apenas a um \ensuremath{\Varid{id}}.
+
+Em último lugar, é preciso ainda juntar estes dois resultados, por forma a ter o tipo final pretendido (\textit{QTree}), o que será facilmente conseguido através da função \textit{inQTree}.
+
+\vspace{0.3cm}
+
+Finalmente, pode-se obter a codificação da função \textit{invertQTree}:
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{invertColor}\mathbin{::}\Conid{PixelRGBA8}\to \Conid{PixelRGBA8}{}\<[E]%
-\\
-\>[B]{}\Varid{invertColor}\;(\Conid{PixelRGBA8}\;\Varid{r}\;\Varid{g}\;\Varid{b}\;\Varid{a})\mathrel{=}\Conid{PixelRGBA8}\;(\Varid{r}\mathbin{-}\mathrm{255})\;(\Varid{g}\mathbin{-}\mathrm{255})\;(\Varid{b}\mathbin{-}\mathrm{255})\;\Varid{a}{}\<[E]%
-\\[\blanklineskip]%
 \>[B]{}\Varid{invertQTree}\mathrel{=}\Varid{cataQTree}\;(\Varid{inQTree}\comp (\Varid{g1}+\Varid{id})){}\<[E]%
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
@@ -1843,14 +1910,16 @@ Em que \textit{pairToTuple} e \textit{tupleToPair} são duas funções auxiliare
 
 \subsection*{Problema 4}
 
+\paragraph{} Inicialmente chegou-se à codificação (apresentada abaixo) das funções para o tipo \textit{FTree}, que já são conhecidas pela resolução da Ficha 6 das aulas teórico-práticas.
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{compAux}\;\Varid{g}\;(\Varid{a},(\Varid{b},\Varid{c}))\mathrel{=}\Varid{g}\;\Varid{a}\;\Varid{b}\;\Varid{c}{}\<[E]%
-\\[\blanklineskip]%
 \>[B]{}\Varid{inFTree}\mathrel{=}\alt{\Conid{Unit}}{\Varid{compAux}\;\Conid{Comp}}{}\<[E]%
+\\
+\>[B]{}\hsindent{5}{}\<[5]%
+\>[5]{}\mathbf{where}\;\Varid{compAux}\;\Varid{g}\;(\Varid{a},(\Varid{b},\Varid{c}))\mathrel{=}\Varid{g}\;\Varid{a}\;\Varid{b}\;\Varid{c}{}\<[E]%
 \\
 \>[B]{}\Varid{outFTree}\;(\Conid{Unit}\;\Varid{b})\mathrel{=}i_1\;\Varid{b}{}\<[E]%
 \\
@@ -1870,48 +1939,208 @@ Em que \textit{pairToTuple} e \textit{tupleToPair} são duas funções auxiliare
 \\
 \>[B]{}\hsindent{5}{}\<[5]%
 \>[5]{}\Varid{bimap}\;\Varid{f}\;\Varid{g}\mathrel{=}\Varid{cataFTree}\;(\Varid{inFTree}\comp (\Varid{baseFTree}\;\Varid{f}\;\Varid{g}\;\Varid{id})){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  calcular o tamanho para um lado qualquer}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{1. generatePTree}
+
+\paragraph{} A função \textbf{\textit{generatePTree}} que gera uma \text{PTree} (árvore de Pitágoras) a partir de um inteiro que indica a ordem dessa mesma árvore, foi construída a partir de um anamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@C=3cm{
+    \ensuremath{\Conid{FTree}\;\Conid{Square}\;\Conid{Square}}      
+&
+    \ensuremath{\N_0\mathbin{+}\N_0\times(\Conid{FTree}\;\Conid{Square}\;\Conid{Square})}^2
+        \ar[l]^-{\ensuremath{\Varid{inFTree}}}    
 \\
-\>[B]{}\Varid{calculateSide}\mathbin{::}\Conid{Int}\to \Conid{Square}{}\<[E]%
+    \ensuremath{\N_0}
+        \ar[r]^-{\ensuremath{\Varid{g}}}
+        \ar[u]^-{\ensuremath{\Varid{generatePTree}\mathrel{=}\Varid{anaFTree}\;\Varid{g}}}      
+&
+    \ensuremath{\N_0\mathbin{+}\N_0\times(\Conid{FTree}\;\Conid{Square}\;\Conid{Square})}^2
+        \ar[u]^-{\ensuremath{\Varid{id}\mathbin{+}\Varid{id}\times(\Varid{generatePTree})}^2}
+}
+\end{eqnarray*}
+
+Assim sendo, a função \textit{g} que trata da recursividade do anamorfismo é dada por uma função \textit{genSquare} que recebe um par \textit{(o,n)} em que o primeiro valor corresponde à ordem da \textit{PTree} que pretendemos gerar, e o segundo corresponde ao nível atual do cálculo (a meio do passo recursivo).
+
+\vspace{0.3cm}
+
+Caso estejamos no nível final (i.e. o == n), a função gera o tamanho do quadrado (\textit{Square} que é um \textit{Float}) com recurso à função auxiliar \textit{calculateSide} que multiplica o valor da ordem por sqrt(2)/2.
+
+Caso estejamos a meio do caso recursivo (i.e. o != n), a função gera o tamanho do quadrado (\textit{Square} que é um \textit{Float}) correspondente a esse nível (também com recurso à função auxiliar \textit{calculateSide}), devolvendo também dois pares correspondentes às duas subárvores, contendo novamente a ordem da \textit{PTree} e o nível seguinte (n+1) que serão utilizados na próxima execução.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{genSquare}\mathbin{::}(\Conid{Int},\Conid{Int})\to (\Conid{Square})+(\Conid{Square},((\Conid{Int},\Conid{Int}),(\Conid{Int},\Conid{Int}))){}\<[E]%
 \\
-\>[B]{}\Varid{calculateSide}\;\Varid{x}\mathrel{=}\Varid{fromIntegral}\;(\Varid{x})\mathbin{*}(\Varid{sqrt}\;(\mathrm{2})\mathbin{/}\mathrm{2}){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\commentbegin 
-Funcao que é usada  na recursividade do anamorfismo
-basicamente temos pares, que à esquerda temos o numero de niveis e à direita em que
-nivel estamos atual.
-quando forem iguais chegamos ao ultimo nivel -> acaba a recursividade (calcula o lado)
-caso recursivo calcula o lado atual e incrementa o nivel em que estamos \commentend}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{genSquare}\mathbin{::}(\Conid{Int},\Conid{Int})\to \Conid{Square}+(\Conid{Square},((\Conid{Int},\Conid{Int}),(\Conid{Int},\Conid{Int}))){}\<[E]%
-\\
-\>[B]{}\Varid{genSquare}\;(\Varid{o},\Varid{n})\mathrel{=}\mathbf{if}\;\Varid{o}\equiv \Varid{n}{}\<[E]%
+\>[B]{}\Varid{genSquare}\;(\Varid{o},\Varid{n})\mathrel{=}\mathbf{let}\;\Varid{calculateSide}\;\Varid{x}\mathrel{=}\Varid{fromIntegral}\;(\Varid{x})\mathbin{*}(\Varid{sqrt}\;(\mathrm{2})\mathbin{/}\mathrm{2}){}\<[E]%
 \\
 \>[B]{}\hsindent{19}{}\<[19]%
-\>[19]{}\mathbf{then}\;i_1\;(\Varid{calculateSide}\;\Varid{o}){}\<[E]%
+\>[19]{}\mathbf{in}\;\mathbf{if}\;\Varid{o}\equiv \Varid{n}{}\<[E]%
 \\
-\>[B]{}\hsindent{19}{}\<[19]%
-\>[19]{}\mathbf{else}\;i_2\;(\Varid{calculateSide}\;\Varid{n},((\Varid{o},\Varid{n}\mathbin{+}\mathrm{1}),(\Varid{o},\Varid{n}\mathbin{+}\mathrm{1}))){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment  funcao principal -> anamorfismo sobre a estrutura, invocando a funcao aux com o nivel 0 inicialmente}{}\<[E]%
+\>[19]{}\hsindent{3}{}\<[22]%
+\>[22]{}\mathbf{then}\;i_1\;(\Varid{calculateSide}\;\Varid{o}){}\<[E]%
 \\
+\>[19]{}\hsindent{3}{}\<[22]%
+\>[22]{}\mathbf{else}\;i_2\;(\Varid{calculateSide}\;\Varid{n},((\Varid{o},\Varid{n}\mathbin{+}\mathrm{1}),(\Varid{o},\Varid{n}\mathbin{+}\mathrm{1}))){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Desta forma, a função \textit{generatePTree} não será mais do que um anamorfismo que utiliza esta função \textit{genSquare} q, invocando-a inicialmente para o nível 0 (e para a ordem \textit{o} recebida).
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{generatePTree}\;\Varid{o}\mathrel{=}\Varid{anaFTree}\;\Varid{genSquare}\;(\Varid{o},\mathrm{0}){}\<[E]%
-\\
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{2. drawPTree}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{drawPTree}\mathrel{=}\bot {}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
 \subsection*{Problema 5}
 
+\subsubsection*{1. singletonbag}
+
+\paragraph{} A função \textit{singletonbag} é uma função auxiliar que apenas serve para colocar um único elemento do tipo \textit{a} (correspondente, no nosso problema, a um \textit{Marble}) numa única \textit{Bag}.
+
+Ou seja, coloca um par composto pelo elemento \textit{a} recebido (i.e. \textit{marble}) e pelo número 1, o que significa que a \textit{Bag} passou a ter apenas uma ocorrência do elemento \textit{a} (i.e. \textit{marble}).
+
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
-\>[B]{}\Varid{singletonbag}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{singletonbag}\;\Varid{m}\mathrel{=}\mathit B\;[\mskip1.5mu (\Varid{m},\mathrm{1})\mskip1.5mu]{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsubsection*{2. muB (multiplicação de \textit{Bag})}
+
+\paragraph{} A função \textbf{\textit{\ensuremath{\mu }}} referente à multiplicação do mónade \textit{Bag} é uma função correspondente ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Bag}\;(\Conid{Bag}\;\Varid{a})}
+           \ar[r]_-{\ensuremath{\mu }}           
+&
+    \ensuremath{\Conid{Bag}\;\Varid{a}}
+&           
+}
+\end{eqnarray*}
+
+Assim, esta função é responsável por, a partir de uma \textit{Bag} cujos elementos são também eles do tipo \textit{Bag}, construir uma única \textit{Bag} contendo os elementos destas últimas.
+
+\vspace{0.3cm}
+
+Então, podemos começar por codificar a função auxiliar \textit{dist} que obedece ao esquema abaixo, gerando a lista dos elementos de uma \textit{Bag}.
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Bag}\;\Varid{a}}
+        \ar[r]_-{\ensuremath{\Varid{dist}}}           
+&
+    \ensuremath{[\mskip1.5mu \Varid{a}\mskip1.5mu]}
+&           
+}
+\end{eqnarray*}
+
+Esta função pode ser facilmente obtida utilizando uma função auxiliar \textit{replicateMarbles} que apenas replica as ocorrências dos elementos do tipo \textit{a} (que, no nosso caso, correspondem a \textit{Marble}s), numa única lista de \textit{a}s:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{replicateMarbles}\mathbin{::}[\mskip1.5mu (\Varid{a},\Conid{Int})\mskip1.5mu]\to [\mskip1.5mu \Varid{a}\mskip1.5mu]{}\<[E]%
 \\
-\>[B]{}\mu \mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{replicateMarbles}\;[\mskip1.5mu \mskip1.5mu]\mathrel{=}[\mskip1.5mu \mskip1.5mu]{}\<[E]%
 \\
-\>[B]{}\Varid{dist}\mathrel{=}\bot {}\<[E]%
+\>[B]{}\Varid{replicateMarbles}\;((\Varid{m},\mathrm{0})\mathbin{:}\Varid{t})\mathrel{=}\Varid{replicateMarbles}\;\Varid{t}{}\<[E]%
+\\
+\>[B]{}\Varid{replicateMarbles}\;((\Varid{m},\Varid{k})\mathbin{:}\Varid{t})\mathrel{=}\Varid{m}\mathbin{:}\Varid{replicateMarbles}\;((\Varid{m},\Varid{k}\mathbin{-}\mathrm{1})\mathbin{:}\Varid{t}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{dist}\mathrel{=}\Varid{replicateMarbles}\comp \Varid{unB}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Para o caso particular do nosso problema, as letras \textit{a} do esquema anterior, correspondem, no entanto, também elas a elementos do tipo \textit{Bag}. Assim:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Bag}\;(\Conid{Bag}\;\Varid{a})}
+        \ar[r]_-{\ensuremath{\Varid{dist}}}           
+&
+    \ensuremath{[\mskip1.5mu \Conid{Bag}\;\Varid{a}\mskip1.5mu]}
+&           
+}
+\end{eqnarray*}
+
+Se na função original \ensuremath{\mu }, começarmos por aplicar esta nova função \textit{dist}, o esquema de \ensuremath{\mu } passa a corresponder ao seguinte:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{\Conid{Bag}\;(\Conid{Bag}\;\Varid{a})}
+        \ar[r]_-{\ensuremath{\Varid{dist}}}           
+&
+    \ensuremath{[\mskip1.5mu \Conid{Bag}\;\Varid{a}\mskip1.5mu]}
+        \ar[r]_-{\ensuremath{\Varid{f}\mathrel{=}\mathbin{?}}}
+&           
+    \ensuremath{\Conid{Bag}\;\Varid{a}}
+}
+\end{eqnarray*}
+
+Pelo que nos resta apenas chegar a uma função (representada pela letra \textit{f} no esquema anterior) que, aplicada a uma lista de \textit{Bag}s, devolva uma única \textit{Bag} contendo os elementos presentes nas \textit{Bag}s da lista.
+
+Esta função, denominada \textit{concatBags}, apresenta-se no esquema seguinte e no código abaixo deste:
+
+\begin{eqnarray*}
+\xymatrix@C=2cm{
+    \ensuremath{[\mskip1.5mu \Conid{Bag}\;\Varid{a}\mskip1.5mu]}
+        \ar[r]_-{\ensuremath{\Varid{concatBags}}}           
+&
+    \ensuremath{\Conid{Bag}\;\Varid{a}}
+&           
+}
+\end{eqnarray*}
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{concatBags}\mathbin{::}[\mskip1.5mu \Conid{Bag}\;\Varid{a}\mskip1.5mu]\to \Conid{Bag}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{concatBags}\;[\mskip1.5mu \mathit B\;\Varid{a}\mskip1.5mu]\mathrel{=}\mathit B\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\Varid{concatBags}\;(\mathit B\;\Varid{a}\mathbin{:}\mathit B\;\Varid{b}\mathbin{:}\Varid{t})\mathrel{=}\Varid{concatBags}\;(\mathit B\;(\Varid{a}\plus \Varid{b})\mathbin{:}\Varid{t}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Chegámos, então, ao esquema final da função \ensuremath{\mu } que queríamos obter inicialmente:
+
+\begin{eqnarray*}
+\xymatrix@C=3cm{
+    \ensuremath{\Conid{Bag}\;(\Conid{Bag}\;\Varid{a})}
+        \ar[r]_-{\ensuremath{\Varid{dist}}}           
+&
+    \ensuremath{[\mskip1.5mu \Conid{Bag}\;\Varid{a}\mskip1.5mu]}
+        \ar[r]_-{\ensuremath{\Varid{concatBags}}}
+&           
+    \ensuremath{\Conid{Bag}\;\Varid{a}}
+}
+\end{eqnarray*}
+
+Por fim, podemos apresentar a codificação final da função \ensuremath{\mu }, correspondente ao esquema anterior:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mu \mathrel{=}\Varid{concatBags}\comp \Varid{dist}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 

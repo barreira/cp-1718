@@ -1154,6 +1154,8 @@ isValidMagicNr = semRepetidos . (cataBlockchain (either (singl . p1) (conc . (si
 
 \subsection*{Problema 2}
 
+\paragraph{} Inicialmente chegou-se à codificação (apresentada abaixo) das funções para o tipo \textit{QTree}, que são muito parecidas às que já conhecemos para as \textit{LTree} (mas com quatro subárvores em vez de apenas duas).
+
 \begin{code}
 
 inQTree = either (cellAux Cell) (blockAux Block)
@@ -1174,10 +1176,10 @@ instance Functor QTree where
 
 \subsubsection*{1.1. rotateQTree}
 
-A função \textbf{\textit{rotateQTree}} consiste em rodar uma \textit{QTree} 90 graus no sentido dos ponteiros do relógio. Esta função foi codificada recorrendo a um catamorfismo que obedece ao seguinte esquema:
+\paragraph{} A função \textbf{\textit{rotateQTree}} consiste em rodar uma \textit{QTree} 90 graus no sentido dos ponteiros do relógio. Esta função foi codificada recorrendo a um catamorfismo que obedece ao seguinte esquema:
 
 \begin{eqnarray*}
-\xymatrix@@C=2cm{
+\xymatrix@@C=2.5cm{
     |QTree A|
            \ar[d]_-{|rotateQTree = cataNat g|}
            \ar[r]_-{|outQTree|}           
@@ -1188,11 +1190,11 @@ A função \textbf{\textit{rotateQTree}} consiste em rodar uma \textit{QTree} 90
      |QTree A|
 &
      |A + (QTree A)|^4
-           \ar[l]^-{|g = either (g1) (g2)|}
+           \ar[l]^-{|g = inQTree . (g1 + g2)|}
 }
 \end{eqnarray*}
 
-Uma \textit{QTree} ou é uma \textit{Cell} ou um \textit{Block}. Assim sendo, para o caso da \textit{Cell} (corresponde ao \textit{g1} da função gene \textit{g}), a única coisa que temos de fazer é inverter as dimensões da submatriz de bits gerada. Por exemplo, se tivermos uma \textit{Cell 1 3 4}, esta irá passar a corresponder a \textit{Cell 1 4 3} após a rotação. Deste modo, \textit{g1} pode ser obtida pelo seguinte esquema:
+Uma \textit{QTree} ou é uma \textit{Cell} ou um \textit{Block}. Assim sendo, para o caso da \textit{Cell} (correspondente ao \textit{g1} da função gene \textit{g}), a única coisa que temos de fazer é inverter as dimensões da submatriz de bits gerada. Por exemplo, se tivermos uma \textit{Cell 1 3 4}, esta irá passar a corresponder a \textit{Cell 1 4 3} após a rotação. Deste modo, \textit{g1} pode ser obtida pelo seguinte esquema:
 
 \vspace{0.5cm}
 
@@ -1220,6 +1222,8 @@ D & B
 
 Esta situação corresponderá a trocar as \textit{QTree} (A, B, C e D) de um \textit{Block} da mesma forma. Ou seja, \textit{Block A B C D} passará a ser \textit{Block C A D B}.
 
+Em último lugar, é preciso ainda juntar estes dois resultados, por forma a ter o tipo final pretendido (\textit{QTree}), o que será facilmente conseguido através da função \textit{inQTree}.
+
 \vspace{0.3cm}
 
 Finalmente, pode-se obter a codificação da função \textit{rotateQTree}, em que \textit{g2} é a função auxiliar que se encarrega da situação descrita acima.
@@ -1233,6 +1237,34 @@ rotateQTree = cataQTree (inQTree . (id >< swap -|- g2))
 
 \subsubsection*{1.2. scaleQTree}
 
+\paragraph{} A função \textbf{\textit{scaleQTree}} consiste em aumentar as dimensões de uma \textit{QTree} segundo um escalar dado. Esta função foi codificada recorrendo a um catamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@@C=2.5cm{
+    |QTree A|
+           \ar[d]_-{|scaleQTree = cataNat g|}
+           \ar[r]_-{|outQTree|}           
+&
+    |A + (QTree A)|^4
+           \ar[d]^{|id + scaleQTree|^4}
+\\
+     |QTree A|
+&
+     |A + (QTree A)|^4
+           \ar[l]^-{|g = inQTree . (g1 + g2)|}
+}
+\end{eqnarray*}
+
+Como já foi dito anteriormente, uma \textit{QTree} ou é uma \textit{Cell} ou um \textit{Block}. Assim sendo, para o caso da \textit{Cell} (correspondente ao \textit{g1} da função gene \textit{g}), a única coisa que temos de fazer é multiplicar os inteiros referentes às dimensões da submatriz de bits gerada. Deste modo, uma \textit{Cell 1 3 4} passará a corresponder a \textit{Cell 1 6 8} após uma escala de fator 2. Assim sendo, a função responsável pela escala de uma \textit{Cell} pode ser facilmente codificada como \textit{g1 (a,(x,y)) = (a, (x*k, y*k))}.
+
+Para o caso do \textit{Block} correspondente às quatro \textit{QTree} do esquema acima -- e que contém o resultado recursivo da aplicação desta função às subárvores --, não é preciso fazer mais nada, pelo que o \textit{g2} corresponde apenas a um |id|.
+
+Em último lugar, é preciso ainda juntar estes dois resultados, por forma a ter o tipo final pretendido (\textit{QTree}), o que será facilmente conseguido através da função \textit{inQTree}.
+
+\vspace{0.3cm}
+
+Finalmente, pode-se obter a codificação da função \textit{scaleQTree}:
+
 \begin{code}
 
 scaleQTree k = cataQTree (inQTree . (g1 -|- id))
@@ -1242,10 +1274,44 @@ scaleQTree k = cataQTree (inQTree . (g1 -|- id))
 
 \subsubsection*{1.3. invertQTree}
 
+\paragraph{} A função \textbf{\textit{invertQTree}} consiste em inverter as cores de uma \textit{QTree}. Esta função foi codificada recorrendo a um catamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@@C=2.5cm{
+    |QTree A|
+           \ar[d]_-{|invertQTree = cataNat g|}
+           \ar[r]_-{|outQTree|}           
+&
+    |A + (QTree A)|^4
+           \ar[d]^{|id + invertQTree|^4}
+\\
+     |QTree A|
+&
+     |A + (QTree A)|^4
+           \ar[l]^-{|g = inQTree . (g1 + g2)|}
+}
+\end{eqnarray*}
+
+Como já foi dito anteriormente, uma \textit{QTree} ou é uma \textit{Cell} ou um \textit{Block}. Assim sendo, para o caso da \textit{Cell} (correspondente ao \textit{g1} da função gene \textit{g}), a única coisa que temos de fazer é inverter as cores da primeira componente da \textit{Cell} (do tipo \textit{PixelRGBA8}), o que corresponde a subtrair o valor de cada um dos campos do RGB do pixel ao valor 255. Para isso, utilizámos a seguinte função auxiliar:
+
 \begin{code}
 
 invertColor :: PixelRGBA8 -> PixelRGBA8
-invertColor (PixelRGBA8 r g b a) = PixelRGBA8 (r - 255) (g - 255) (b - 255) a
+invertColor (PixelRGBA8 r g b a) = PixelRGBA8 (255 - r) (255 - g) (255 - b) a
+
+\end{code}
+
+Assim sendo, a função \textit{g1} pode ser codificada à custa da aplicação desta função auxiliar para o primeiro componente da \textit{Cell} (e deixando intactos os restantes dois componentes). Logo, a função pode ser dada por: \textit{g1 (p,(x,y)) = (invertColor p, (x,y))}.
+
+Para o caso do \textit{Block} correspondente às quatro \textit{QTree} do esquema acima -- e que contém o resultado recursivo da aplicação desta função às subárvores --, não é preciso fazer mais nada, pelo que o \textit{g2} corresponde apenas a um |id|.
+
+Em último lugar, é preciso ainda juntar estes dois resultados, por forma a ter o tipo final pretendido (\textit{QTree}), o que será facilmente conseguido através da função \textit{inQTree}.
+
+\vspace{0.3cm}
+
+Finalmente, pode-se obter a codificação da função \textit{invertQTree}:
+
+\begin{code}
 
 invertQTree = cataQTree (inQTree . (g1 -|- id))
     where g1 (p,(x,y)) = (invertColor p, (x,y))
@@ -1540,11 +1606,12 @@ tupleToPair (a,b,c,d) = ((a,b), (c,d))
 
 \subsection*{Problema 4}
 
+\paragraph{} Inicialmente chegou-se à codificação (apresentada abaixo) das funções para o tipo \textit{FTree}, que já são conhecidas pela resolução da Ficha 6 das aulas teórico-práticas.
+
 \begin{code}
 
-compAux g (a,(b,c)) = g a b c
-
 inFTree = either Unit (compAux Comp)
+    where compAux g (a,(b,c)) = g a b c
 outFTree (Unit b) = i1 b
 outFTree (Comp a b c) = i2 (a,(b,c))
 baseFTree f g h = g -|- f >< (h >< h)
@@ -1556,33 +1623,187 @@ hyloFTree f g = cataFTree f . anaFTree g
 instance Bifunctor FTree where
     bimap f g = cataFTree (inFTree . (baseFTree f g id))
 
--- calcular o tamanho para um lado qualquer
-calculateSide :: Int -> Square
-calculateSide x = fromIntegral(x) * (sqrt(2)/2)
+\end{code}
 
-{-
-Funcao que é usada  na recursividade do anamorfismo
-basicamente temos pares, que à esquerda temos o numero de niveis e à direita em que
-nivel estamos atual.
-quando forem iguais chegamos ao ultimo nivel -> acaba a recursividade (calcula o lado)
-caso recursivo calcula o lado atual e incrementa o nivel em que estamos
--}
-genSquare :: (Int, Int) -> Either Square (Square, ((Int,Int),(Int,Int)))
-genSquare (o,n) = if o == n
-                  then i1 (calculateSide o)
-                  else i2 (calculateSide n, ((o,n+1), (o,n+1)))
+\subsubsection*{1. generatePTree}
 
--- funcao principal -> anamorfismo sobre a estrutura, invocando a funcao aux com o nivel 0 inicialmente
+\paragraph{} A função \textbf{\textit{generatePTree}} que gera uma \text{PTree} (árvore de Pitágoras) a partir de um inteiro que indica a ordem dessa mesma árvore, foi construída a partir de um anamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@@C=3cm{
+    |FTree Square Square|      
+&
+    |Nat0 + Nat0 >< (FTree Square Square)|^2
+        \ar[l]^-{|inFTree|}    
+\\
+    |Nat0|
+        \ar[r]^-{|g|}
+        \ar[u]^-{|generatePTree = anaFTree g|}      
+&
+    |Nat0 + Nat0 >< (FTree Square Square)|^2
+        \ar[u]^-{|id + id >< (generatePTree)|^2}
+}
+\end{eqnarray*}
+
+Assim sendo, a função \textit{g} que trata da recursividade do anamorfismo é dada por uma função \textit{genSquare} que recebe um par \textit{(o,n)} em que o primeiro valor corresponde à ordem da \textit{PTree} que pretendemos gerar, e o segundo corresponde ao nível atual do cálculo (a meio do passo recursivo).
+
+\vspace{0.3cm}
+
+Caso estejamos no nível final (i.e. o == n), a função gera o tamanho do quadrado (\textit{Square} que é um \textit{Float}) com recurso à função auxiliar \textit{calculateSide} que multiplica o valor da ordem por sqrt(2)/2.
+
+Caso estejamos a meio do caso recursivo (i.e. o != n), a função gera o tamanho do quadrado (\textit{Square} que é um \textit{Float}) correspondente a esse nível (também com recurso à função auxiliar \textit{calculateSide}), devolvendo também dois pares correspondentes às duas subárvores, contendo novamente a ordem da \textit{PTree} e o nível seguinte (n+1) que serão utilizados na próxima execução.
+
+\begin{code}
+
+genSquare :: (Int, Int) -> Either (Square) (Square, ((Int, Int), (Int, Int)))
+genSquare (o,n) = let calculateSide x = fromIntegral(x) * (sqrt(2)/2)
+                  in if o == n
+                     then i1 (calculateSide o)
+                     else i2 (calculateSide n, ((o,n+1), (o,n+1)))
+
+\end{code}
+
+Desta forma, a função \textit{generatePTree} não será mais do que um anamorfismo que utiliza esta função \textit{genSquare} q, invocando-a inicialmente para o nível 0 (e para a ordem \textit{o} recebida).
+
+\begin{code}
+
 generatePTree o = anaFTree genSquare (o,0)
+
+\end{code}
+
+\subsubsection*{2. drawPTree}
+
+\begin{code}
+
 drawPTree = undefined
+
 \end{code}
 
 \subsection*{Problema 5}
 
+\subsubsection*{1. singletonbag}
+
+\paragraph{} A função \textit{singletonbag} é uma função auxiliar que apenas serve para colocar um único elemento do tipo \textit{a} (correspondente, no nosso problema, a um \textit{Marble}) numa única \textit{Bag}.
+
+Ou seja, coloca um par composto pelo elemento \textit{a} recebido (i.e. \textit{marble}) e pelo número 1, o que significa que a \textit{Bag} passou a ter apenas uma ocorrência do elemento \textit{a} (i.e. \textit{marble}).
+
 \begin{code}
-singletonbag = undefined
-muB = undefined
-dist = undefined
+
+singletonbag m = B [(m, 1)]
+
+\end{code}
+
+\subsubsection*{2. muB (multiplicação de \textit{Bag})}
+
+\paragraph{} A função \textbf{\textit{|muB|}} referente à multiplicação do mónade \textit{Bag} é uma função correspondente ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Bag (Bag a)|
+           \ar[r]_-{|muB|}           
+&
+    |Bag a|
+&           
+}
+\end{eqnarray*}
+
+Assim, esta função é responsável por, a partir de uma \textit{Bag} cujos elementos são também eles do tipo \textit{Bag}, construir uma única \textit{Bag} contendo os elementos destas últimas.
+
+\vspace{0.3cm}
+
+Então, podemos começar por codificar a função auxiliar \textit{dist} que obedece ao esquema abaixo, gerando a lista dos elementos de uma \textit{Bag}.
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Bag a|
+        \ar[r]_-{|dist|}           
+&
+    |[a]|
+&           
+}
+\end{eqnarray*}
+
+Esta função pode ser facilmente obtida utilizando uma função auxiliar \textit{replicateMarbles} que apenas replica as ocorrências dos elementos do tipo \textit{a} (que, no nosso caso, correspondem a \textit{Marble}s), numa única lista de \textit{a}s:
+
+\begin{code}
+
+replicateMarbles :: [(a, Int)] -> [a]
+replicateMarbles [] = []
+replicateMarbles ((m, 0) : t) = replicateMarbles t
+replicateMarbles ((m, k) : t) = m : replicateMarbles ((m, k-1) : t)
+
+dist = replicateMarbles . unB
+
+\end{code}
+
+Para o caso particular do nosso problema, as letras \textit{a} do esquema anterior, correspondem, no entanto, também elas a elementos do tipo \textit{Bag}. Assim:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Bag (Bag a)|
+        \ar[r]_-{|dist|}           
+&
+    |[Bag a]|
+&           
+}
+\end{eqnarray*}
+
+Se na função original |muB|, começarmos por aplicar esta nova função \textit{dist}, o esquema de |muB| passa a corresponder ao seguinte:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Bag (Bag a)|
+        \ar[r]_-{|dist|}           
+&
+    |[Bag a]|
+        \ar[r]_-{|f = ?|}
+&           
+    |Bag a|
+}
+\end{eqnarray*}
+
+Pelo que nos resta apenas chegar a uma função (representada pela letra \textit{f} no esquema anterior) que, aplicada a uma lista de \textit{Bag}s, devolva uma única \textit{Bag} contendo os elementos presentes nas \textit{Bag}s da lista.
+
+Esta função, denominada \textit{concatBags}, apresenta-se no esquema seguinte e no código abaixo deste:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |[Bag a]|
+        \ar[r]_-{|concatBags|}           
+&
+    |Bag a|
+&           
+}
+\end{eqnarray*}
+
+\begin{code}
+
+concatBags :: [Bag a] -> Bag a
+concatBags [B a] = B a
+concatBags (B a : B b : t) = concatBags (B (a ++ b) : t)
+
+\end{code}
+
+Chegámos, então, ao esquema final da função |muB| que queríamos obter inicialmente:
+
+\begin{eqnarray*}
+\xymatrix@@C=3cm{
+    |Bag (Bag a)|
+        \ar[r]_-{|dist|}           
+&
+    |[Bag a]|
+        \ar[r]_-{|concatBags|}
+&           
+    |Bag a|
+}
+\end{eqnarray*}
+
+Por fim, podemos apresentar a codificação final da função |muB|, correspondente ao esquema anterior:
+
+\begin{code}
+
+muB = concatBags . dist
+
 \end{code}
 
 \section{Como exprimir cálculos e diagramas em LaTeX/lhs2tex}
