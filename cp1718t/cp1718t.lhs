@@ -1036,7 +1036,7 @@ allTransactions = cataBlockchain (either (p2 . p2) (conc . (p2 . p2 >< id)))
 
 \end{code}
 
-\subsubsection*{2. Ledger}
+\subsubsection*{2. ledger}
 
 \paragraph{} A função \textbf{\textit{ledger}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
 
@@ -1170,20 +1170,105 @@ hyloQTree f g = cataQTree f . anaQTree g
 instance Functor QTree where
     fmap f = cataQTree(inQTree . baseQTree f id)
 
-invertColor :: PixelRGBA8 -> PixelRGBA8
-invertColor (PixelRGBA8 r g b a) = PixelRGBA8 (r - 255) (g - 255) (b - 255) a
+\end{code}
+
+\subsubsection*{1.1. rotateQTree}
+
+A função \textbf{\textit{rotateQTree}} consiste em rodar uma \textit{QTree} 90 graus no sentido dos ponteiros do relógio. Esta função foi codificada recorrendo a um catamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |QTree A|
+           \ar[d]_-{|rotateQTree = cataNat g|}
+           \ar[r]_-{|outQTree|}           
+&
+    |A + (QTree A)|^4
+           \ar[d]^{|id + rotateQTree|^4}
+\\
+     |QTree A|
+&
+     |A + (QTree A)|^4
+           \ar[l]^-{|g = either (g1) (g2)|}
+}
+\end{eqnarray*}
+
+Uma \textit{QTree} ou é uma \textit{Cell} ou um \textit{Block}. Assim sendo, para o caso da \textit{Cell} (corresponde ao \textit{g1} da função gene \textit{g}), a única coisa que temos de fazer é inverter as dimensões da submatriz de bits gerada. Por exemplo, se tivermos uma \textit{Cell 1 3 4}, esta irá passar a corresponder a \textit{Cell 1 4 3} após a rotação. Deste modo, \textit{g1} pode ser obtida pelo seguinte esquema:
+
+\vspace{0.5cm}
+
+\xymatrix@@C=2cm{
+    |A = Cell Nat0 >< Nat0 >< Nat0|
+            \ar[r]_-{|id >< swap|}    
+&
+    |Cell Nat0 >< Nat0 >< Nat0 = A| 
+}
+\end{eqnarray*}
+
+Para o caso do \textit{Block} que já contém o resultado recursivo da aplicação desta função, a sua componente \textit{g2} da função gene \textit{g}, corresponde a rodar as suas quatro submatrizes (correspondentes às suas quatro \textit{QTree}) uma posição para direita, de acordo com o seguinte esquema:
+
+\[ \left[ \begin{array}{cc}
+A & B \\
+C & D
+\end{array} \right]
+%
+===>
+\left[ \begin{array}{cc}
+C & A \\
+D & B
+\end{array} \right]
+\]
+
+Esta situação corresponderá a trocar as \textit{QTree} (A, B, C e D) de um \textit{Block} da mesma forma. Ou seja, \textit{Block A B C D} passará a ser \textit{Block C A D B}.
+
+\vspace{0.3cm}
+
+Finalmente, pode-se obter a codificação da função \textit{rotateQTree}, em que \textit{g2} é a função auxiliar que se encarrega da situação descrita acima.
+
+\begin{code}
 
 rotateQTree = cataQTree (inQTree . (id >< swap -|- g2))
     where g2 (a,(b,(c,d))) = (c,(a,(d,b)))
+
+\end{code}
+
+\subsubsection*{1.2. scaleQTree}
+
+\begin{code}
+
 scaleQTree k = cataQTree (inQTree . (g1 -|- id))
     where g1 (a,(x,y)) = (a, (x*k, y*k))
+
+\end{code}
+
+\subsubsection*{1.3. invertQTree}
+
+\begin{code}
+
+invertColor :: PixelRGBA8 -> PixelRGBA8
+invertColor (PixelRGBA8 r g b a) = PixelRGBA8 (r - 255) (g - 255) (b - 255) a
+
 invertQTree = cataQTree (inQTree . (g1 -|- id))
     where g1 (p,(x,y)) = (invertColor p, (x,y))
+
+\end{code}
+
+\subsubsection*{2. compressQTree}
+
+\begin{code}
+
 compressQTree = undefined
+
+\end{code}
+
+\subsubsection*{3. outlineQTree}
+
+\begin{code}
+
 outlineQTree p = qt2bm . cataQTree (inQTree . (aux -|- (id >< (id >< (id >< id)))))
     where aux (a,(x,y)) = if (p a) == True
                           then (True,(x,y)) 
                           else (False,(x,y))
+
 \end{code}
 
 \subsection*{Problema 3}
