@@ -1410,13 +1410,120 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 3}
 
+\paragraph{} Aplicando a lei de recursividade múltipla para \ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}},
+
+\begin{eqnarray*}
+\start
+	\ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}
+%
+\just\equiv{ Lei de Fokkinga (50) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \mathsf{in}\mathrel{=}\Varid{u}\comp (\Varid{id}\mathbin{+}\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\\\Varid{l}\;\Varid{k}\comp \mathsf{in}\mathrel{=}\Varid{v}\comp (\Varid{id}\mathbin{+}\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}})\end{lcbr}}    
+%
+\just\equiv{ Def-+ (21) \ensuremath{\times\mathrm{2}} , Natural-id (1) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \mathsf{in}\mathrel{=}\Varid{u}\comp \alt{i_1}{i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}\\\Varid{l}\;\Varid{k}\comp \mathsf{in}\mathrel{=}\Varid{v}\comp \alt{i_1}{i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}\end{lcbr}}
+%  
+\just\equiv{ Fusão-+ (20) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \mathsf{in}\mathrel{=}\alt{\Varid{u}\comp i_1}{\Varid{u}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}\\\Varid{l}\;\Varid{k}\comp \mathsf{in}\mathrel{=}\alt{\Varid{v}\comp i_1}{\Varid{v}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}\end{lcbr}}
+%  
+\just\equiv{ Def-\ensuremath{\mathsf{in}} \hspace{-3}\ensuremath{\N_0} \ensuremath{\times\mathrm{2}} , Fusão-+ (20) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\alt{\Varid{f}\;\Varid{k}\comp \underline{\mathrm{0}}}{\Varid{f}\;\Varid{k}\comp \succ }\mathrel{=}\alt{\Varid{u}\comp i_1}{\Varid{u}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}\\\alt{\Varid{l}\;\Varid{k}\comp \underline{\mathrm{0}}}{\Varid{l}\;\Varid{k}\comp \succ }\mathrel{=}\alt{\Varid{v}\comp i_1}{\Varid{v}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}}\end{lcbr}}
+%
+\just\equiv{ Eq-+ (27) \ensuremath{\times\mathrm{2}} , explicitando \textit{u} e \textit{v} como \ensuremath{\alt{\Varid{u1}}{\Varid{u2}}} e \ensuremath{\alt{\Varid{v1}}{\Varid{v2}}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\alt{\Varid{u1}}{\Varid{u2}}\comp i_1\\\Varid{f}\;\Varid{k}\comp \succ \mathrel{=}\alt{\Varid{u1}}{\Varid{u2}}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{l}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\alt{\Varid{v1}}{\Varid{v2}}\comp i_1\\\Varid{l}\;\Varid{k}\comp \succ \mathrel{=}\alt{\Varid{v1}}{\Varid{v2}}\comp i_2\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}    
+%
+\just\equiv{ Cancelamento-+ (18) \ensuremath{\times\mathrm{4}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\Varid{u1}\\\Varid{f}\;\Varid{k}\comp \succ \mathrel{=}\Varid{u2}\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{l}\;\Varid{k}\comp \underline{\mathrm{0}}\mathrel{=}\Varid{v1}\\\Varid{l}\;\Varid{k}\comp \succ \mathrel{=}\Varid{v2}\comp \conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\end{lcbr}}  
+%
+\just\equiv{ Igualdade extensional (73) \ensuremath{\times\mathrm{4}} , Def-comp (74) \ensuremath{\times\mathbin{?}}, Natural-const (3) \ensuremath{\times\mathrm{2}} , Def-succ \ensuremath{\times\mathrm{2}} , Def-split (78) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{f}\;\Varid{k}\;\mathrm{0}\mathrel{=}\Varid{u1}\;\Varid{d}\\\Varid{f}\;\Varid{k}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{u2}\comp \conj{\Varid{f}\;\Varid{k}\;\Varid{d}}{\Varid{l}\;\Varid{k}\;\Varid{d}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{l}\;\Varid{k}\;\mathrm{0}\mathrel{=}\Varid{v1}\;\Varid{d}\\\Varid{l}\;\Varid{k}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{v2}\comp \conj{\Varid{f}\;\Varid{k}\;\Varid{d}}{\Varid{l}\;\Varid{k}\;\Varid{d}}\end{lcbr}}  
+%
+\end{eqnarray*}
+
+Analisando os resultados obtidos e as definições \textit{pointwise} das funções \textit{f k} e \textit{l k} presentes no enunciado, podemos deduzir quais as funções correspondentes a \textit{u1}, \textit{u2}, \textit{v1} e \textit{v2} na solução apresentada acima:
+
+\begin{eqnarray*}
+\start
+        \ensuremath{\begin{lcbr}\Varid{u1}\mathrel{=}\underline{\mathrm{1}}\\\Varid{u2}\mathrel{=}\Varid{mul}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{v1}\mathrel{=}\succ \\\Varid{v2}\mathrel{=}\succ \comp \p2\end{lcbr}}  	
+%
+\end{eqnarray*}
+
+Logo \ensuremath{\conj{\Varid{f}\;\Varid{k}}{\Varid{l}\;\Varid{k}}\mathrel{=}\cata{\conj{\alt{\Varid{u1}}{\Varid{u2}}}{\alt{\Varid{v1}}{\Varid{v2}}}}\mathrel{=}\cata{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\succ }{\succ \comp \p2}}}}.
+
+\vspace{0.5cm}
+
+Aplicando a lei de recursividade múltipla para \ensuremath{\conj{\Varid{g}}{\Varid{s}}},
+
+\begin{eqnarray*}
+\start
+	\ensuremath{\conj{\Varid{g}}{\Varid{s}}}
+%
+\just\equiv{ Lei de Fokkinga (50) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{g}\comp \mathsf{in}\mathrel{=}\Varid{u}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}})\\\Varid{s}\comp \mathsf{in}\mathrel{=}\Varid{v}\comp (\Varid{id}\mathbin{+}\conj{\Varid{g}}{\Varid{s}})\end{lcbr}}    
+%
+\just\equiv{ Def-+ (21) \ensuremath{\times\mathrm{2}} , Natural-id (1) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{g}\comp \mathsf{in}\mathrel{=}\Varid{u}\comp \alt{i_1}{i_2\comp \conj{\Varid{g}}{\Varid{s}}}\\\Varid{s}\comp \mathsf{in}\mathrel{=}\Varid{v}\comp \alt{i_1}{i_2\comp \conj{\Varid{g}}{\Varid{s}}}\end{lcbr}}
+%  
+\just\equiv{ Fusão-+ (20) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{g}\comp \mathsf{in}\mathrel{=}\alt{\Varid{u}\comp i_1}{\Varid{u}\comp i_2\comp \conj{\Varid{g}}{\Varid{s}}}\\\Varid{s}\comp \mathsf{in}\mathrel{=}\alt{\Varid{v}\comp i_1}{\Varid{v}\comp i_2\comp \conj{\Varid{g}}{\Varid{s}}}\end{lcbr}}
+%  
+\just\equiv{ Def-\ensuremath{\mathsf{in}} \hspace{-3}\ensuremath{\N_0} \ensuremath{\times\mathrm{2}} , Fusão-+ (20) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\alt{\Varid{g}\comp \underline{\mathrm{0}}}{\Varid{g}\comp \succ }\mathrel{=}\alt{\Varid{u}\comp i_1}{\Varid{u}\comp i_2\comp \conj{\Varid{g}}{\Varid{s}}}\\\alt{\Varid{s}\comp \underline{\mathrm{0}}}{\Varid{s}\comp \succ }\mathrel{=}\alt{\Varid{v}\comp i_1}{\Varid{v}\comp i_2\comp \conj{\Varid{g}}{\Varid{s}}}\end{lcbr}}
+%
+\just\equiv{ Eq-+ (27) \ensuremath{\times\mathrm{2}} , explicitando \textit{u} e \textit{v} como \ensuremath{\alt{\Varid{u1}}{\Varid{u2}}} e \ensuremath{\alt{\Varid{v1}}{\Varid{v2}}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{g}\comp \underline{\mathrm{0}}\mathrel{=}\alt{\Varid{u1}}{\Varid{u2}}\comp i_1\\\Varid{g}\comp \succ \mathrel{=}\alt{\Varid{u1}}{\Varid{u2}}\comp i_2\comp \conj{\Varid{g}}{\Varid{s}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{s}\comp \underline{\mathrm{0}}\mathrel{=}\alt{\Varid{v1}}{\Varid{v2}}\comp i_1\\\Varid{s}\comp \succ \mathrel{=}\alt{\Varid{v1}}{\Varid{v2}}\comp i_2\comp \conj{\Varid{g}}{\Varid{s}}\end{lcbr}}    
+%
+\just\equiv{ Cancelamento-+ (18) \ensuremath{\times\mathrm{4}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{g}\comp \underline{\mathrm{0}}\mathrel{=}\Varid{u1}\\\Varid{g}\comp \succ \mathrel{=}\Varid{u2}\comp \conj{\Varid{g}}{\Varid{s}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{s}\comp \underline{\mathrm{0}}\mathrel{=}\Varid{v1}\\\Varid{s}\comp \succ \mathrel{=}\Varid{v2}\comp \conj{\Varid{g}}{\Varid{s}}\end{lcbr}}  
+%
+\just\equiv{ Igualdade extensional (73) \ensuremath{\times\mathrm{4}} , Def-comp (74) \ensuremath{\times\mathbin{?}}, Natural-const (3) \ensuremath{\times\mathrm{2}} , Def-succ \ensuremath{\times\mathrm{2}} , Def-split (78) \ensuremath{\times\mathrm{2}} }
+%
+        \ensuremath{\begin{lcbr}\Varid{g}\;\mathrm{0}\mathrel{=}\Varid{u1}\;\Varid{d}\\\Varid{g}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{u2}\comp \conj{\Varid{g}\;\Varid{d}}{\Varid{s}\;\Varid{d}}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{s}\;\mathrm{0}\mathrel{=}\Varid{v1}\;\Varid{d}\\\Varid{s}\;(\Varid{d}\mathbin{+}\mathrm{1})\mathrel{=}\Varid{v2}\comp \conj{\Varid{g}\;\Varid{d}}{\Varid{s}\;\Varid{d}}\end{lcbr}}  
+%
+\end{eqnarray*}
+
+Analisando os resultados obtidos e as definições \textit{pointwise} das funções \textit{g} e \textit{s} presentes no enunciado, podemos deduzir quais as funções correspondentes a \textit{u1}, \textit{u2}, \textit{v1} e \textit{v2} na solução apresentada acima:
+
+\begin{eqnarray*}
+\start
+        \ensuremath{\begin{lcbr}\Varid{u1}\mathrel{=}\underline{\mathrm{1}}\\\Varid{u2}\mathrel{=}\Varid{mul}\end{lcbr}}
+        \ensuremath{\begin{lcbr}\Varid{v1}\mathrel{=}\underline{\mathrm{1}}\\\Varid{v2}\mathrel{=}\succ \comp \p2\end{lcbr}}  	
+%
+\end{eqnarray*}
+
+Logo \ensuremath{\conj{\Varid{g}}{\Varid{s}}\mathrel{=}\cata{\conj{\alt{\Varid{u1}}{\Varid{u2}}}{\alt{\Varid{v1}}{\Varid{v2}}}}\mathrel{=}\cata{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\underline{\mathrm{1}}}{\succ \comp \p2}}}}.
+
+\vspace{0.5cm}
+
+Como sabemos que o ciclo \textit{for} ao qual queremos chegar pode ser escrito como um catamorfismo do tipo \ensuremath{\mathsf{for}\ \Varid{b}\ \Varid{i}\mathrel{=}\cata{\alt{\underline{\Varid{i}}}{\Varid{b}}}}, vamos aplicar a lei de \textit{"Banana-split"} por forma a, combinando os resultados anteriores, obtermos um resultado que esteja sob esta forma.
+
 \begin{eqnarray*}
 \start
 	\ensuremath{\conj{\cata{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\underline{\mathrm{1}}}{\succ \comp \p2}}}}{\cata{\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\succ }{\succ \comp \p2}}}}}
 %
-\just\equiv{ "Banana-split" (51), Def-functor-\ensuremath{\Conid{Nat}} }
+\just\equiv{ "Banana-split" (51) , Def-Functor-\ensuremath{\N_0} \ensuremath{\times\mathrm{2}} }
 %
     \ensuremath{\cata{(\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\underline{\mathrm{1}}}{\succ \comp \p2}}\times\conj{\alt{\underline{\mathrm{1}}}{\Varid{mul}}}{\alt{\succ }{\succ \comp \p2}})\comp \conj{\Varid{id}\mathbin{+}\p1}{\Varid{id}\mathbin{+}\p2}}}
+%
 \just\equiv{ Lei da Troca (28) \ensuremath{\times\mathrm{2}} }
 %
     \ensuremath{\cata{(\alt{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{\conj{\Varid{mul}}{\succ \comp \p2}}\times\alt{\conj{\underline{\mathrm{1}}}{\succ }}{\conj{\Varid{mul}}{\succ \comp \p2}})\comp \conj{\Varid{id}\mathbin{+}\p1}{\Varid{id}\mathbin{+}\p2}}}
@@ -1425,7 +1532,7 @@ outras funções auxiliares que sejam necessárias.
 %
     \ensuremath{\cata{\conj{\alt{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{\conj{\Varid{mul}}{\succ \comp \p2}}\comp (\Varid{id}\mathbin{+}\p1)}{\alt{\conj{\underline{\mathrm{1}}}{\succ }}{\conj{\Varid{mul}}{\succ \comp \p2}}\comp (\Varid{id}\mathbin{+}\p2)}}}
 %
-\just\equiv{ Absorção-+ (22) \ensuremath{\times\mathrm{2}}, Natural-id (1) \ensuremath{\times\mathrm{2}} }
+\just\equiv{ Absorção-+ (22) \ensuremath{\times\mathrm{2}} , Natural-id (1) \ensuremath{\times\mathrm{2}} }
 %
     \ensuremath{\cata{\conj{\alt{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{\conj{\Varid{mul}}{\succ \comp \p2}\comp \p1}}{\alt{\conj{\underline{\mathrm{1}}}{\succ }}{\conj{\Varid{mul}}{\succ \comp \p2}\comp \p2}}}}
 %
@@ -1433,10 +1540,36 @@ outras funções auxiliares que sejam necessárias.
 %
     \ensuremath{\cata{\alt{\conj{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{\conj{\underline{\mathrm{1}}}{\succ }}}{\conj{\conj{\Varid{mul}}{\succ \comp \p2}\comp \p1}{\conj{\Varid{mul}}{\succ \comp \p2}\comp \p2}}}}
 %
-\just\equiv{ }
-%    
+\just\equiv{ Def-x (10) }
+%
+    \ensuremath{\cata{\alt{\conj{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{\conj{\underline{\mathrm{1}}}{\succ }}}{\conj{\Varid{mul}}{\succ \comp \p2}\times\conj{\Varid{mul}}{\succ \comp \p2}}}}
 \qed
 \end{eqnarray*}
+
+Tal como queríamos inicialmente, a solução encontra-se sob a forma \ensuremath{\mathsf{for}\ \Varid{b}\ \Varid{i}\mathrel{=}\cata{\alt{\underline{\Varid{i}}}{\Varid{b}}}}, pelo que podemos retirar \textit{base} e \textit {loop} (\textit{i} e \textit{b}).
+
+Assim sendo:
+\begin{itemize}
+\item \textit{base} corresponderá ao primeiro componente do \textit{either} do resultado: \ensuremath{\conj{\conj{\underline{\mathrm{1}}}{\underline{\mathrm{1}}}}{\conj{\underline{\mathrm{1}}}{\succ }}}
+\item \textit{loop} corresponderá ao segundo componente do \textit{either} do resultado: \ensuremath{\conj{\Varid{mul}}{\succ \comp \p2}\times\conj{\Varid{mul}}{\succ \comp \p2}}
+\end{itemize}
+
+Aplicando as leis de inserção de variáveis necessárias, verificamos que a função \textit{base} quando aplicada a um qualquer \textit{k} resulta em \textit{((1,1), (1,k+1))}.
+
+\vspace{0.5cm}
+
+Finalmente, podemos apresentar as definições finais de \textit{base k} e \textit{loop}:
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{base}\;\Varid{k}\mathrel{=}\Varid{pairToTuple}\;((\mathrm{1},\Varid{k}\mathbin{+}\mathrm{1}),(\mathrm{1},\mathrm{1})){}\<[E]%
+\\
+\>[B]{}\Varid{loop}\mathrel{=}\Varid{pairToTuple}\comp (\conj{\Varid{mul}}{\succ \comp \p2}\times\conj{\Varid{mul}}{\succ \comp \p2})\comp \Varid{tupleToPair}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Em que \textit{pairToTuple} e \textit{tupleToPair} são duas funções auxiliares que foram usadas de forma a tipar corretamente os resultados dos nossos cálculos com os tipos presentes no enunciado deste trabalho. Estas funções apenas convertem um par de pares no 4-tuplo correspondente, para quaisquer tipos de dados.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
@@ -1448,20 +1581,6 @@ outras funções auxiliares que sejam necessárias.
 \>[B]{}\Varid{tupleToPair}\mathbin{::}(\Varid{t0},\Varid{t1},\Varid{t2},\Varid{t3})\to ((\Varid{t0},\Varid{t1}),(\Varid{t2},\Varid{t3})){}\<[E]%
 \\
 \>[B]{}\Varid{tupleToPair}\;(\Varid{a},\Varid{b},\Varid{c},\Varid{d})\mathrel{=}((\Varid{a},\Varid{b}),(\Varid{c},\Varid{d})){}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\Varid{base}\;\Varid{k}\mathrel{=}\Varid{pairToTuple}\;((\mathrm{1},\Varid{k}\mathbin{+}\mathrm{1}),(\mathrm{1},\mathrm{1})){}\<[E]%
-\\
-\>[B]{}\Varid{loop}\mathrel{=}\Varid{pairToTuple}\comp (\conj{\Varid{mul}}{\succ \comp \p2}\times\conj{\Varid{mul}}{\succ \comp \p2})\comp \Varid{tupleToPair}{}\<[E]%
-\\[\blanklineskip]%
-\>[B]{}\mbox{\onelinecomment base k = aux ((1, k+1), (1,1))}{}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment     where aux ((a,b), (c,d)) = (a,b,c,d)}{}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment loop = aux2 . aux (split (mul) (succ.p2) >< split (mul) (succ.p2))}{}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment     where aux f (a,b,c,d) = f ((a,b),(c, d))}{}\<[E]%
-\\
-\>[B]{}\mbox{\onelinecomment           aux2 ((a,b), (c,d)) = (a,b,c,d)}{}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 
@@ -1470,8 +1589,7 @@ outras funções auxiliares que sejam necessárias.
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{29}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{compAux}\;\Varid{g}\;(\Varid{a},(\Varid{b},\Varid{c}))\mathrel{=}\Varid{g}\;\Varid{a}\;\Varid{b}\;\Varid{c}{}\<[E]%
 \\[\blanklineskip]%
@@ -1511,11 +1629,13 @@ caso recursivo calcula o lado atual e incrementa o nivel em que estamos \comment
 \\[\blanklineskip]%
 \>[B]{}\Varid{genSquare}\mathbin{::}(\Conid{Int},\Conid{Int})\to \Conid{Square}+(\Conid{Square},((\Conid{Int},\Conid{Int}),(\Conid{Int},\Conid{Int}))){}\<[E]%
 \\
-\>[B]{}\Varid{genSquare}\;(\Varid{o},\Varid{n})\mid \Varid{o}\equiv \Varid{n}{}\<[29]%
-\>[29]{}\mathrel{=}i_1\;(\Varid{calculateSide}\;\Varid{o}){}\<[E]%
+\>[B]{}\Varid{genSquare}\;(\Varid{o},\Varid{n})\mathrel{=}\mathbf{if}\;\Varid{o}\equiv \Varid{n}{}\<[E]%
 \\
-\>[B]{}\hsindent{17}{}\<[17]%
-\>[17]{}\mid \Varid{otherwise}\mathrel{=}i_2\;(\Varid{calculateSide}\;\Varid{n},((\Varid{o},\Varid{n}\mathbin{+}\mathrm{1}),(\Varid{o},\Varid{n}\mathbin{+}\mathrm{1}))){}\<[E]%
+\>[B]{}\hsindent{19}{}\<[19]%
+\>[19]{}\mathbf{then}\;i_1\;(\Varid{calculateSide}\;\Varid{o}){}\<[E]%
+\\
+\>[B]{}\hsindent{19}{}\<[19]%
+\>[19]{}\mathbf{else}\;i_2\;(\Varid{calculateSide}\;\Varid{n},((\Varid{o},\Varid{n}\mathbin{+}\mathrm{1}),(\Varid{o},\Varid{n}\mathbin{+}\mathrm{1}))){}\<[E]%
 \\[\blanklineskip]%
 \>[B]{}\mbox{\onelinecomment  funcao principal -> anamorfismo sobre a estrutura, invocando a funcao aux com o nivel 0 inicialmente}{}\<[E]%
 \\

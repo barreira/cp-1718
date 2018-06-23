@@ -1031,14 +1031,217 @@ outlineQTree p = qt2bm . cataQTree (inQTree . (aux -|- (id >< (id >< (id >< id))
 
 \subsection*{Problema 3}
 
+\paragraph{} Aplicando a lei de recursividade múltipla para |split (f k) (l k)|,
+
+\begin{eqnarray*}
+\start
+	|split (f k) (l k)|
+%
+\just\equiv{ Lei de Fokkinga (50) |><2| }
+%
+        |lcbr(
+		f k . inNat = u . (id + split (f k) (l k))
+	)(
+		l k . inNat = v . (id + split (f k) (l k))
+	)|    
+%
+\just\equiv{ Def-+ (21) |><2| , Natural-id (1) |><2| }
+%
+        |lcbr(
+		f k . inNat = u . either (i1) (i2 . split (f k) (l k))
+	)(
+		l k . inNat = v . either (i1) (i2 . split (f k) (l k))
+	)|
+%  
+\just\equiv{ Fusão-+ (20) |><2| }
+%
+        |lcbr(
+		f k . inNat = either (u . i1) (u . i2 . split (f k) (l k))
+	)(
+		l k . inNat = either (v . i1) (v . i2 . split (f k) (l k))
+	)|
+%  
+\just\equiv{ Def-|inNat| \hspace{-3}|Nat0| |><2| , Fusão-+ (20) |><2| }
+%
+        |lcbr(
+		either (f k . const 0) (f k . succ) = either (u . i1) (u . i2 . split (f k) (l k))
+	)(
+		either (l k . const 0) (l k . succ) = either (v . i1) (v . i2 . split (f k) (l k))
+	)|
+%
+\just\equiv{ Eq-+ (27) |><2| , explicitando \textit{u} e \textit{v} como |either (u1) (u2)| e |either (v1) (v2)| }
+%
+        |lcbr(
+		f k . const 0 = either (u1) (u2) . i1
+	)(
+		f k . succ = either (u1) (u2) . i2 . split (f k) (l k)
+	)|
+        |lcbr(
+		l k . const 0 = either (v1) (v2) . i1
+	)(
+		l k . succ = either (v1) (v2) . i2 . split (f k) (l k)
+	)|    
+%
+\just\equiv{ Cancelamento-+ (18) |><4| }
+%
+        |lcbr(
+		f k . const 0 = u1
+	)(
+		f k . succ = u2 . split (f k) (l k)
+	)|
+        |lcbr(
+		l k . const 0 = v1
+	)(
+		l k . succ = v2 . split (f k) (l k)
+	)|  
+%
+\just\equiv{ Igualdade extensional (73) |><4| , Def-comp (74) |>< ?|, Natural-const (3) |><2| , Def-succ |><2| , Def-split (78) |><2| }
+%
+        |lcbr(
+		f k 0 = u1 d
+	)(
+		f k (d+1) = u2 . split (f k d) (l k d)
+	)|
+        |lcbr(
+		l k 0 = v1 d
+	)(
+		l k (d+1) = v2 . split (f k d) (l k d)
+	)|  
+%
+\end{eqnarray*}
+
+Analisando os resultados obtidos e as definições \textit{pointwise} das funções \textit{f k} e \textit{l k} presentes no enunciado, podemos deduzir quais as funções correspondentes a \textit{u1}, \textit{u2}, \textit{v1} e \textit{v2} na solução apresentada acima:
+
+\begin{eqnarray*}
+\start
+        |lcbr(
+		u1 = const 1
+	)(
+		u2 = mul
+	)|
+        |lcbr(
+		v1 = succ
+	)(
+		v2 = succ . p2
+	)|  	
+%
+\end{eqnarray*}
+
+Logo |split (f k) (l k) = cataNat (split (either (u1) (u2)) (either (v1) (v2))) = cataNat (split (either (const 1) (mul)) (either (succ) (succ . p2)))|.
+
+\vspace{0.5cm}
+
+Aplicando a lei de recursividade múltipla para |split (g) (s)|,
+
+\begin{eqnarray*}
+\start
+	|split (g) (s)|
+%
+\just\equiv{ Lei de Fokkinga (50) |><2| }
+%
+        |lcbr(
+		g . inNat = u . (id + split (g) (s))
+	)(
+		s . inNat = v . (id + split (g) (s))
+	)|    
+%
+\just\equiv{ Def-+ (21) |><2| , Natural-id (1) |><2| }
+%
+        |lcbr(
+		g . inNat = u . either (i1) (i2 . split (g) (s))
+	)(
+		s . inNat = v . either (i1) (i2 . split (g) (s))
+	)|
+%  
+\just\equiv{ Fusão-+ (20) |><2| }
+%
+        |lcbr(
+		g . inNat = either (u . i1) (u . i2 . split (g) (s))
+	)(
+		s . inNat = either (v . i1) (v . i2 . split (g) (s))
+	)|
+%  
+\just\equiv{ Def-|inNat| \hspace{-3}|Nat0| |><2| , Fusão-+ (20) |><2| }
+%
+        |lcbr(
+		either (g . const 0) (g . succ) = either (u . i1) (u . i2 . split (g) (s))
+	)(
+		either (s . const 0) (s . succ) = either (v . i1) (v . i2 . split (g) (s))
+	)|
+%
+\just\equiv{ Eq-+ (27) |><2| , explicitando \textit{u} e \textit{v} como |either (u1) (u2)| e |either (v1) (v2)| }
+%
+        |lcbr(
+		g . const 0 = either (u1) (u2) . i1
+	)(
+		g . succ = either (u1) (u2) . i2 . split (g) (s)
+	)|
+        |lcbr(
+		s . const 0 = either (v1) (v2) . i1
+	)(
+		s . succ = either (v1) (v2) . i2 . split (g) (s)
+	)|    
+%
+\just\equiv{ Cancelamento-+ (18) |><4| }
+%
+        |lcbr(
+		g . const 0 = u1
+	)(
+		g . succ = u2 . split (g) (s)
+	)|
+        |lcbr(
+		s . const 0 = v1
+	)(
+		s . succ = v2 . split (g) (s)
+	)|  
+%
+\just\equiv{ Igualdade extensional (73) |><4| , Def-comp (74) |>< ?|, Natural-const (3) |><2| , Def-succ |><2| , Def-split (78) |><2| }
+%
+        |lcbr(
+		g 0 = u1 d
+	)(
+		g (d+1) = u2 . split (g d) (s d)
+	)|
+        |lcbr(
+		s 0 = v1 d
+	)(
+		s (d+1) = v2 . split (g d) (s d)
+	)|  
+%
+\end{eqnarray*}
+
+Analisando os resultados obtidos e as definições \textit{pointwise} das funções \textit{g} e \textit{s} presentes no enunciado, podemos deduzir quais as funções correspondentes a \textit{u1}, \textit{u2}, \textit{v1} e \textit{v2} na solução apresentada acima:
+
+\begin{eqnarray*}
+\start
+        |lcbr(
+		u1 = const 1
+	)(
+		u2 = mul
+	)|
+        |lcbr(
+		v1 = const 1
+	)(
+		v2 = succ . p2
+	)|  	
+%
+\end{eqnarray*}
+
+Logo |split (g) (s) = cataNat (split (either (u1) (u2)) (either (v1) (v2))) = cataNat (split (either (const 1) (mul)) (either (const 1) (succ . p2)))|.
+
+\vspace{0.5cm}
+
+Como sabemos que o ciclo \textit{for} ao qual queremos chegar pode ser escrito como um catamorfismo do tipo |for b i = cataNat(either (const i) (b))|, vamos aplicar a lei de \textit{"Banana-split"} por forma a, combinando os resultados anteriores, obtermos um resultado que esteja sob esta forma.
+
 \begin{eqnarray*}
 \start
 	|split (cataNat (split (either (const 1) (mul)) (either (const 1) (succ.p2)))) (cataNat (split (either (const 1) (mul)) (either (succ) (succ.p2))))|
 %
-\just\equiv{ "Banana-split" (51), Def-functor-|Nat| }
+\just\equiv{ "Banana-split" (51) , Def-Functor-|Nat0| |><2| }
 %
     |cataNat ((split (either (const 1) (mul)) (either (const 1) (succ.p2)) >< split (either (const 1) (mul)) (either (succ) (succ.p2))) . split (id + p1) (id + p2))|
-\just\equiv{ Lei da Troca (28) |>< 2| }
+%
+\just\equiv{ Lei da Troca (28) |><2| }
 %
     |cataNat ((either (split (const 1) (const 1)) (split (mul) (succ.p2)) >< either (split (const 1) (succ)) (split (mul) (succ.p2))) . split (id + p1) (id + p2))|
 %
@@ -1046,7 +1249,7 @@ outlineQTree p = qt2bm . cataQTree (inQTree . (aux -|- (id >< (id >< (id >< id))
 %
     |cataNat (split (either (split (const 1) (const 1)) (split (mul) (succ.p2)) . (id + p1)) (either (split (const 1) (succ)) (split (mul) (succ.p2)) . (id + p2)))|
 %
-\just\equiv{ Absorção-+ (22) |>< 2|, Natural-id (1) |>< 2| }
+\just\equiv{ Absorção-+ (22) |><2| , Natural-id (1) |><2| }
 %
     |cataNat (split (either (split (const 1) (const 1)) (split (mul) (succ.p2) . p1)) (either (split (const 1) (succ)) (split (mul) (succ.p2) . p2)))|
 %
@@ -1054,10 +1257,34 @@ outlineQTree p = qt2bm . cataQTree (inQTree . (aux -|- (id >< (id >< (id >< id))
 %
     |cataNat (either (split (split (const 1) (const 1)) (split (const 1) (succ))) (split (split (mul) (succ.p2) . p1) (split (mul) (succ.p2) . p2)))|
 %
-\just\equiv{ }
-%    
+\just\equiv{ Def-x (10) }
+%
+    |cataNat (either (split (split (const 1) (const 1)) (split (const 1) (succ))) (split (mul) (succ.p2) >< split (mul) (succ.p2)))|
 \qed
 \end{eqnarray*}
+
+Tal como queríamos inicialmente, a solução encontra-se sob a forma |for b i = cataNat(either (const i) (b))|, pelo que podemos retirar \textit{base} e \textit {loop} (\textit{i} e \textit{b}).
+
+Assim sendo:
+\begin{itemize}
+\item \textit{base} corresponderá ao primeiro componente do \textit{either} do resultado: |split (split (const 1) (const 1)) (split (const 1) (succ))|
+\item \textit{loop} corresponderá ao segundo componente do \textit{either} do resultado: |split (mul) (succ.p2) >< split (mul) (succ.p2)|
+\end{itemize}
+
+Aplicando as leis de inserção de variáveis necessárias, verificamos que a função \textit{base} quando aplicada a um qualquer \textit{k} resulta em \textit{((1,1), (1,k+1))}.
+
+\vspace{0.5cm}
+
+Finalmente, podemos apresentar as definições finais de \textit{base k} e \textit{loop}:
+
+\begin{code}
+
+base k = pairToTuple ((1, k+1), (1,1))
+loop = pairToTuple . (split (mul) (succ.p2) >< split (mul) (succ.p2)) . tupleToPair
+
+\end{code}
+
+Em que \textit{pairToTuple} e \textit{tupleToPair} são duas funções auxiliares que foram usadas de forma a tipar corretamente os resultados dos nossos cálculos com os tipos presentes no enunciado deste trabalho. Estas funções apenas convertem um par de pares no 4-tuplo correspondente, para quaisquer tipos de dados.
 
 \begin{code}
 
@@ -1067,8 +1294,6 @@ pairToTuple ((a,b), (c,d)) = (a,b,c,d)
 tupleToPair :: (t0, t1, t2, t3) -> ((t0,t1), (t2,t3))
 tupleToPair (a,b,c,d) = ((a,b), (c,d))
 
-base k = pairToTuple ((1, k+1), (1,1))
-loop = pairToTuple . (split (mul) (succ.p2) >< split (mul) (succ.p2)) . tupleToPair
 \end{code}
 
 \subsection*{Problema 4}
@@ -1101,8 +1326,9 @@ quando forem iguais chegamos ao ultimo nivel -> acaba a recursividade (calcula o
 caso recursivo calcula o lado atual e incrementa o nivel em que estamos
 -}
 genSquare :: (Int, Int) -> Either Square (Square, ((Int,Int),(Int,Int)))
-genSquare (o,n) | o == n    = i1 (calculateSide o)
-                | otherwise = i2 (calculateSide n, ((o,n+1), (o,n+1)))
+genSquare (o,n) = if o == n
+                  then i1 (calculateSide o)
+                  else i2 (calculateSide n, ((o,n+1), (o,n+1)))
 
 -- funcao principal -> anamorfismo sobre a estrutura, invocando a funcao aux com o nivel 0 inicialmente
 generatePTree o = anaFTree genSquare (o,0)
