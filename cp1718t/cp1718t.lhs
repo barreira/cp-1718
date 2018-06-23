@@ -105,7 +105,7 @@
 
 \begin{center}\large
 \begin{tabular}{ll}
-\textbf{Grupo} nr. & 99 (preencher)
+\textbf{Grupo} nr. & 74
 \\\hline
 a61855 & Ana Paula Carvalho
 \\
