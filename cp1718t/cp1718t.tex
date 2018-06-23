@@ -1302,14 +1302,14 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
-Inicialmente chegou-se à codificação dos funções para o tipo \textit{Blockchain}, apresentada abaixo:
+\paragraph{} Inicialmente chegou-se à codificação (apresentada abaixo) das funções para o tipo \textit{Blockchain}, que são muito parecidas às que já conhecemos para as listas.
 
 \begin{hscode}\SaveRestoreHook
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\Varid{inBlockchain}\mathrel{=}\alt{\Conid{Bc}}{\Conid{Bcs}}{}\<[E]%
 \\
-\>[B]{}\Varid{outBlockchain}\;(\Conid{Bc}\;\Varid{b})\mathrel{=}i_1\;(\Varid{b}){}\<[E]%
+\>[B]{}\Varid{outBlockchain}\;(\Conid{Bc}\;\Varid{b})\mathrel{=}i_1\;\Varid{b}{}\<[E]%
 \\
 \>[B]{}\Varid{outBlockchain}\;(\Conid{Bcs}\;(\Varid{b},\Varid{bc}))\mathrel{=}i_2\;(\Varid{b},\Varid{bc}){}\<[E]%
 \\
@@ -1325,7 +1325,7 @@ Inicialmente chegou-se à codificação dos funções para o tipo \textit{Blockc
 
 \subsubsection*{1. allTransactions}
 
-A função \textbf{\textit{allTransactions}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
+\paragraph{} A função \textbf{\textit{allTransactions}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
 
 \begin{eqnarray*}
 \xymatrix@C=2cm{
@@ -1377,7 +1377,7 @@ Assim, pudemos chegar à codificação da função \textit{allTransactions}, cor
 
 \subsubsection*{2. Ledger}
 
-A função \textbf{\textit{ledger}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
+\paragraph{} A função \textbf{\textit{ledger}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
 
 \begin{eqnarray*}
 \xymatrix@C=2cm{
@@ -1436,7 +1436,7 @@ Assim, pudemos chegar à codificação da função \textit{ledger}, corresponden
 
 \subsubsection*{3. isValidMagicNr}
 
-Para codificar a função \textbf{\textit{isValidMagicNr}} utilizámos uma função auxiliar, \textit{magicNrList}, que lista todos os números mágicos de uma \textit{Blockchain}, com recurso a um catamorfismo que obedece ao seguinte esquema:
+\paragraph{} Para codificar a função \textbf{\textit{isValidMagicNr}} utilizámos uma função auxiliar, \textit{magicNrList}, que lista todos os números mágicos de uma \textit{Blockchain}, com recurso a um catamorfismo que obedece ao seguinte esquema:
 
 \begin{eqnarray*}
 \xymatrix@C=2cm{

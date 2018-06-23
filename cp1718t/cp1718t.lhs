@@ -973,11 +973,11 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
-Inicialmente chegou-se à codificação dos funções para o tipo \textit{Blockchain}, apresentada abaixo:
+\paragraph{} Inicialmente chegou-se à codificação (apresentada abaixo) das funções para o tipo \textit{Blockchain}, que são muito parecidas às que já conhecemos para as listas.
 
 \begin{code}
 inBlockchain = either Bc Bcs
-outBlockchain (Bc b) = i1(b)
+outBlockchain (Bc b) = i1 b
 outBlockchain (Bcs (b,bc)) = Right(b,bc)
 recBlockchain g = id -|- (id >< g)
 cataBlockchain g = g . (recBlockchain (cataBlockchain g)) . outBlockchain
@@ -987,7 +987,7 @@ hyloBlockchain f g = cataBlockchain f . anaBlockchain g
 
 \subsubsection*{1. allTransactions}
 
-A função \textbf{\textit{allTransactions}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
+\paragraph{} A função \textbf{\textit{allTransactions}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
 
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
@@ -1038,7 +1038,7 @@ allTransactions = cataBlockchain (either (p2 . p2) (conc . (p2 . p2 >< id)))
 
 \subsubsection*{2. Ledger}
 
-A função \textbf{\textit{ledger}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
+\paragraph{} A função \textbf{\textit{ledger}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
 
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
@@ -1096,7 +1096,7 @@ ledger = cataBlockchain (either (map(swap . p2) . p2 . p2) (conc . ((map(swap.p2
 
 \subsubsection*{3. isValidMagicNr}
 
-Para codificar a função \textbf{\textit{isValidMagicNr}} utilizámos uma função auxiliar, \textit{magicNrList}, que lista todos os números mágicos de uma \textit{Blockchain}, com recurso a um catamorfismo que obedece ao seguinte esquema:
+\paragraph{} Para codificar a função \textbf{\textit{isValidMagicNr}} utilizámos uma função auxiliar, \textit{magicNrList}, que lista todos os números mágicos de uma \textit{Blockchain}, com recurso a um catamorfismo que obedece ao seguinte esquema:
 
 \begin{eqnarray*}
 \xymatrix@@C=2cm{
