@@ -973,14 +973,9 @@ outras funções auxiliares que sejam necessárias.
 
 \subsection*{Problema 1}
 
-\begin{code}
-semRepetidos :: Eq a => [a] -> Bool
-semRepetidos [] = True
-semRepetidos [a] = True
-semRepetidos (h:t) = if (elem h t == True)
-                     then False
-                     else semRepetidos t
+Inicialmente chegou-se à codificação dos funções para o tipo \textit{Blockchain}, apresentada abaixo:
 
+\begin{code}
 inBlockchain = either Bc Bcs
 outBlockchain (Bc b) = i1(b)
 outBlockchain (Bcs (b,bc)) = Right(b,bc)
@@ -988,20 +983,182 @@ recBlockchain g = id -|- (id >< g)
 cataBlockchain g = g . (recBlockchain (cataBlockchain g)) . outBlockchain
 anaBlockchain g = inBlockchain . (recBlockchain (anaBlockchain g)) . g
 hyloBlockchain f g = cataBlockchain f . anaBlockchain g
+\end{code}
 
-allTransactions = cataBlockchain (either (p2.p2) (conc . (p2.p2 >< id)))
-ledger = cataBlockchain (either (map(swap.p2).p2.p2) (conc . ((map(swap.p2).p2.p2) >< id)))
-isValidMagicNr = semRepetidos . (cataBlockchain (either (singl . p1) (conc . ((singl . p1) >< id))))
+\subsubsection*{1. allTransactions}
+
+A função \textbf{\textit{allTransactions}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{|allTransactions = cataNat g|}
+           \ar[r]_-{|outBlockchain|}            
+&
+    |Block + Block >< Blockchain|
+           \ar[d]^{|id + id >< allTransactions|}
+\\
+     |Transactions|
+&
+     |Block + Block >< Transactions|
+           \ar[l]^-{|g = either (g1) (g2)|}
+}
+\end{eqnarray*}
+
+Em que as funções \textit{g1} e \textit{g2} que compõem o gene \textit{g} são dadas, respetivamente, por:
+
+\vspace{0.3cm}
+
+\xymatrix@@C=2cm{
+    |Block = MagicNo >< (Time >< Transactions)|
+            \ar[r]_-{|p2 . p2|}    
+&
+    |Transactions|
+}
+\end{eqnarray*}
+
+\xymatrix@@C=2.5cm{
+    |Block >< Transactions|
+           \ar[r]_-{|g1 >< id = p2 . p2 >< id|}    
+&
+    |Transactions >< Transactions|
+            \ar[r]_-{|conc|}     
+&
+    |Transactions|    
+}
+\end{eqnarray*}
+
+Assim, pudemos chegar à codificação da função \textit{allTransactions}, correspondente ao catamorfismo apresentado acima.
+
+\begin{code}
+
+allTransactions = cataBlockchain (either (p2 . p2) (conc . (p2 . p2 >< id)))
+
+\end{code}
+
+\subsubsection*{2. Ledger}
+
+A função \textbf{\textit{ledger}} foi calculada utilizando um catamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{|ledger = cataNat g|}
+           \ar[r]_-{|outBlockchain|}            
+&
+    |Block + Block >< Blockchain|
+           \ar[d]^{|id + id >< ledger|}
+\\
+     |Ledger|
+&
+     |Block + Block >< Ledger|
+           \ar[l]^-{|g = either (g1) (g2)|}
+}
+\end{eqnarray*}
+
+Em que as funções \textit{g1} e \textit{g2} que compõem o gene \textit{g} são dadas, respetivamente, por:
+
+\vspace{0.3cm}
+
+\xymatrix@@C=2cm{
+    |Block = MagicNo >< (Time >< Transactions)|
+            \ar[r]_-{|p2 . p2|}    
+&
+    |Transactions = ((Entity, (Value,Entity)))*|
+            \ar[d]_-{|map (swap . p2)|}  
+\\
+&
+    |(Entity,Value)* = Ledger|
+}
+\end{eqnarray*}
+
+\xymatrix@@C=4.5cm{
+    |Block >< Ledger|
+           \ar[r]_-{|g1 >< id = (map(swap.p2) . p2 . p2) >< id|}    
+&
+    |Ledger >< Ledger = (Entity,Value)* >< (Entity,Value)*|
+            \ar[d]_-{|conc|}     
+\\
+&
+    |(Entity,Value)* = Ledger|    
+}
+\end{eqnarray*}
+
+Assim, pudemos chegar à codificação da função \textit{ledger}, correspondente ao catamorfismo apresentado acima.
+
+\begin{code}
+
+ledger = cataBlockchain (either (map(swap . p2) . p2 . p2) (conc . ((map(swap.p2) . p2 . p2) >< id)))
+
+\end{code}
+
+\vspace{0.5cm}
+
+\subsubsection*{3. isValidMagicNr}
+
+Para codificar a função \textbf{\textit{isValidMagicNr}} utilizámos uma função auxiliar, \textit{magicNrList}, que lista todos os números mágicos de uma \textit{Blockchain}, com recurso a um catamorfismo que obedece ao seguinte esquema:
+
+\begin{eqnarray*}
+\xymatrix@@C=2cm{
+    |Blockchain|
+           \ar[d]_-{|magicNrList = cataNat g|}
+           \ar[r]_-{|outBlockchain|}           
+&
+    |Block + Block >< Blockchain|
+           \ar[d]^{|id + id >< magicNrList|}
+\\
+     |(MagicNo)*|
+&
+     |Block + Block >< (MagicNo)*|
+           \ar[l]^-{|g = either (g1) (g2)|}
+}
+\end{eqnarray*}
+
+Em que as funções \textit{g1} e \textit{g2} que compõem o gene \textit{g} são dadas, respetivamente, por:
+
+\vspace{0.3cm}
+
+\xymatrix@@C=2cm{
+    |Block = MagicNo >< (Time >< Transactions)|
+            \ar[r]_-{|p1|}    
+&
+    |MagicNo|
+            \ar[r]_-{|singl|}
+&
+    |(MagicNo)*|     
+}
+\end{eqnarray*}
+
+\xymatrix@@C=2cm{
+    |Block >< (MagicNo)*|
+            \ar[r]_-{|singl . p1 >< id|}    
+&
+    |(MagicNo)* >< (MagicNo)*|
+            \ar[r]_-{|conc|}
+&
+    |(MagicNo)*|    
+}
+\end{eqnarray*}
+
+Finalmente, conseguimos chegar ao código da função \textit{isValidMagicNr} que queríamos inicialmente, aplicando uma função auxiliar \textit{semRepetidos} (que apenas verifica se uma lista tem elementos repetidos) ao resultado do catamorfismo \textit{magicNrList} apresentado anteriormente.
+
+\begin{code}
+
+isValidMagicNr = semRepetidos . (cataBlockchain (either (singl . p1) (conc . (singl . p1 >< id))))
+    where semRepetidos [] = True
+          semRepetidos [a] = True
+          semRepetidos (h:t) = if (elem h t == True)
+                               then False
+                               else semRepetidos t    
 \end{code}
 
 \subsection*{Problema 2}
 
 \begin{code}
 
-cellAux f (x,(y,z)) = f x y z
-blockAux g (a,(b,(c,d))) = g a b c d
-
 inQTree = either (cellAux Cell) (blockAux Block)
+    where cellAux f (x,(y,z)) = f x y z 
+          blockAux g (a,(b,(c,d))) = g a b c d
 outQTree (Cell a x y) = i1 ((a,(x,y)))
 outQTree (Block a b c d) = i2 ((a,(b,(c,d))))
 baseQTree g f = g >< id -|- (f >< (f >< (f >< f)))
