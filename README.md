@@ -1,4 +1,5 @@
 # CP
+### Nota final do trabalho: 15 em 20.
 
 Projeto da U.C. de __Cálculo de Programas__ (2017/18)
 
